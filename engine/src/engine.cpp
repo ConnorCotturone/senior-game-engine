@@ -4,13 +4,7 @@
 
 
 #include <iostream>
-#include "engine.h"
-
-int main() 
-{
-    say_yes();
-    return 0;
-}
+#include "../include/engine.h"
 
 void say_yes() {
     std::cout << "yes" << std::endl;
