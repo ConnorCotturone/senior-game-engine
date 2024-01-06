@@ -2,15 +2,18 @@
 // sandbox_app.h
 // 12/30/2023
 
-#include <string>
-#include <app.h>
+#ifndef SANDBOX_H
+#define SANDBOX_H
 
-class SandboxApp : public App 
+#include <string>
+#include <engine.h>
+
+class Sandbox : public Engine
 {
 
 public:
-    SandboxApp();              
-    ~SandboxApp();     
+    Sandbox();              
+    ~Sandbox();     
 
 protected:
     void Initialize() override;
@@ -21,3 +24,5 @@ protected:
     std::string message;
 
 };
+
+#endif // SANDBOX_H

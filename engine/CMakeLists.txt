@@ -4,10 +4,13 @@ find_package(OpenGL REQUIRED)
 add_library(engine STATIC
     # include files
     include/engine.h
+    include/window.h
+    include/input.h
 
     # source files
     src/engine.cpp
-    src/app.cpp
+    src/window.cpp
+    src/input.cpp
 )
 
 target_link_libraries(engine PUBLIC glfw OpenGL::GL)

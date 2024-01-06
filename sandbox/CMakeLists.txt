@@ -1,5 +1,5 @@
 add_executable(sandbox 
-    src/sandbox_app.cpp 
+    src/sandbox.cpp 
 )
 
 target_link_libraries(sandbox PRIVATE 
