@@ -51,6 +51,8 @@ void Engine::Run() {
 }
 
 void Engine::Initialize() {
+    LoggingHandler::Initialize();
+    LoggingHandler::GetCoreLogger()->warn("Initialize LoggingHandler.");
     
     m_windowHandler = new Window(settings.WindowWidth,
                                  settings.WindowHeight,

@@ -1,3 +1,6 @@
 [submodule "engine/extern/assimp"]
 	path = engine/extern/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "engine/extern/spdlog"]
+	path = engine/extern/spdlog
+	url = https://github.com/gabime/spdlog.git

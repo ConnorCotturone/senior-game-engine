@@ -1,8 +1,9 @@
 find_package(GLFW3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_subdirectory(extern/assimp)
 
+add_subdirectory(extern/assimp)
+add_subdirectory(extern/spdlog)
 
 add_library(engine STATIC
     # include files
@@ -14,6 +15,7 @@ add_library(engine STATIC
     include/model.h
     include/camera.h
     include/material.h
+    include/logging.h
 
     # source files
     src/engine.cpp
@@ -24,12 +26,13 @@ add_library(engine STATIC
     src/model.cpp
     src/camera.cpp
     src/material.cpp    
+    src/logging.cpp
 
     # glad
     extern/glad/glad.c
 )
 
-target_link_libraries(engine PUBLIC glfw OpenGL::GL assimp)
+target_link_libraries(engine PUBLIC glfw OpenGL::GL assimp spdlog::spdlog_header_only)
 
 target_include_directories(engine PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include 

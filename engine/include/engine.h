@@ -12,7 +12,7 @@
 #include "../include/model.h"
 #include "../include/shader.h"
 #include "../include/camera.h"
-
+#include "../include/logging.h"
 
 struct EngineSettings {
             int WindowWidth = 800;
