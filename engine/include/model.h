@@ -41,6 +41,7 @@ private:
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 
     std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+    glm::vec3 getMaterialColor(aiMaterial *mat, const char *pKey, unsigned int type, unsigned int idx); 
 
 };
 

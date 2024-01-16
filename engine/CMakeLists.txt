@@ -13,6 +13,7 @@ add_library(engine STATIC
     include/mesh.h
     include/model.h
     include/camera.h
+    include/material.h
 
     # source files
     src/engine.cpp
@@ -22,6 +23,7 @@ add_library(engine STATIC
     src/mesh.cpp
     src/model.cpp
     src/camera.cpp
+    src/material.cpp    
 
     # glad
     extern/glad/glad.c

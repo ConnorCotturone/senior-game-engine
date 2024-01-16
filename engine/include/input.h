@@ -13,13 +13,15 @@ public:
     Input(GLFWwindow* window);
     ~Input();
 
-
     bool isKeyPressed(int key) const;
-    void getMousePosition(double& xpos, double& ypos) const;
+    void getMouseOffset(double& xoffset, double& offset);
 
 private:
     GLFWwindow* m_window;
 
+    double mouseX;
+    double mouseY;
+    bool firstMouse;
 };
 
 #endif // INPUT_H

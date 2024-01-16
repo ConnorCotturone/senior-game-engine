@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 
 #include "../include/shader.h"
+#include "../include/material.h"
 
 
 struct Vertex {
@@ -31,9 +32,10 @@ class Mesh {
 public:
     std::vector<Vertex>         m_vertices;
     std::vector<unsigned int>   m_indices;
-    std::vector<Texture>        m_textures;
+    Material                    m_material;          
+    // std::vector<Texture>        m_textures;  ( deprecated -- remove )
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material);
     ~Mesh();
 
     void Draw(Shader &shader);

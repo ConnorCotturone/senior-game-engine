@@ -38,7 +38,7 @@ void Camera::MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch 
     yoffset *= MouseSensitivity;
 
     Yaw     += xoffset;
-    Pitch   += xoffset;
+    Pitch   += yoffset;
 
     if (constrainPitch)
     {

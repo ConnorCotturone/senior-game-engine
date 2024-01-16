@@ -24,12 +24,8 @@ struct EngineSettings {
 class Engine
 {
 public:
-    
-    
-public:
     Engine();
     virtual ~Engine();
-
 
     void Run();
 
@@ -48,7 +44,6 @@ protected:
     Model* m_model;
     
     bool m_isRunning;
-
 };
 
 #endif // ENGINE_H
