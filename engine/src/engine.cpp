@@ -29,7 +29,7 @@ Engine::~Engine() {
 
 // main game loop
 void Engine::Run() {
-    Initialize();
+    Initialize();   // NOTE: INIT FIRST ALWAYS
 
     m_isRunning = true;
 
@@ -52,7 +52,6 @@ void Engine::Run() {
 
 void Engine::Initialize() {
     LoggingHandler::Initialize();
-    LoggingHandler::GetCoreLogger()->warn("Initialize LoggingHandler.");
     
     m_windowHandler = new Window(settings.WindowWidth,
                                  settings.WindowHeight,
@@ -71,24 +70,23 @@ void Engine::Initialize() {
 
     m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
+    // initialize shader program w/ frag & vert shaders
     m_shader = new Shader("../shaders/model_loading.vs", "../shaders/model_loading.fs");
 
     stbi_set_flip_vertically_on_load(true);
-    // m_model = new Model("objects/backpack/backpack.obj");
-    m_model = new Model("soccerball/ball.obj");
+    m_model = new Model("objects/backpack/backpack.obj");
 }
 
 void Engine::Update(float deltaTime) {
-    double xoffset, yoffset;
-    m_inputHandler->getMouseOffset(xoffset, yoffset);
-    m_camera->MouseUpdate(xoffset, yoffset, true);
 
-
+    // INPUT
+    // check for ESC & exit if pressed
     m_windowHandler->Update();
     if (m_inputHandler->isKeyPressed(GLFW_KEY_ESCAPE)) {
         m_isRunning = false;
     }
 
+    // keyboard WASD movement updates
     if (m_inputHandler->isKeyPressed(GLFW_KEY_W)) 
         m_camera->KeyboardUpdate(FORWARD, deltaTime);
     if (m_inputHandler->isKeyPressed(GLFW_KEY_S)) 
@@ -97,40 +95,43 @@ void Engine::Update(float deltaTime) {
         m_camera->KeyboardUpdate(LEFT, deltaTime);
     if (m_inputHandler->isKeyPressed(GLFW_KEY_D)) 
         m_camera->KeyboardUpdate(RIGHT, deltaTime);
+
+    // mouse / camera updates
+    double xoffset, yoffset;
+    m_inputHandler->getMouseOffset(xoffset, yoffset);
+    m_camera->MouseUpdate(xoffset, yoffset, true);
 }
 
 void Engine::Render() {
+    // window background
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_shader->use();
 
+    // setup lighting
     glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
     m_shader->setVec3("light.position", lightPos);
     m_shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
     m_shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
     m_shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-
-
-
-
     // transformation matrix - perspective projection 
-    glm::mat4 projection = glm::perspective(glm::radians(m_camera->Zoom), 
+    glm::mat4 projection = glm::perspective(glm::radians(m_camera->getZoom()), 
                             (float) settings.WindowWidth / (float) settings.WindowHeight,
                             0.1f, 100.0f);
+    m_shader->setMat4("projection", projection);
 
     // transformation matrix - view / camera space
     glm::mat4 view = m_camera->GetViewMatrix();
-
-    m_shader->setMat4("projection", projection);
     m_shader->setMat4("view", view);
 
+    // model matrix - translate/scale model into world space 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));     // model -> world space position translation
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));         // model -> world space size/scale translation
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));     // translate (position)
+    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));         // scale (size)
     m_shader->setMat4("model", model);  
+
     m_model->Draw(*m_shader);
 }
 

@@ -20,6 +20,7 @@ Window::~Window()
 
 void Window::Initialize(int width, int height, const char* title) 
 {
+    PHX_TRACE("Initializing window : '{}' ({}w x {}h)", title, width, height);
     glfwInit();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

@@ -8,6 +8,7 @@
 #define GL_SILENCE_DEPRECATION
 
 #include <GLFW/glfw3.h>
+#include "../include/logging.h"
 
 class Window {
 public:

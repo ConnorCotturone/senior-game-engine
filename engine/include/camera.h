@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <vector>
+#include "../include/logging.h"
 
 enum Camera_Movement {
     FORWARD,
@@ -24,10 +25,21 @@ const float SPEED       =   2.5f;
 const float SENSITIVITY =   0.1f;
 const float ZOOM        =  45.0f;
 
-
 class Camera 
 {
 public:
+    
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+
+    glm::mat4 GetViewMatrix();
+    float getZoom() { return Zoom; }
+
+    void KeyboardUpdate(Camera_Movement direction, float deltaTime);
+    void MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch); 
+
+private:
+    void updateCameraVectors();
+
     glm::vec3 Position;
     glm::vec3 Front;
     glm::vec3 Up;
@@ -37,21 +49,10 @@ public:
     float Yaw;
     float Pitch;
 
+    // todo: make constants?
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
-
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
-
-    glm::mat4 GetViewMatrix();
-
-    void KeyboardUpdate(Camera_Movement direction, float deltaTime);
-
-    void MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch); 
-
-private:
-
-    void updateCameraVectors();
 
 };
 
