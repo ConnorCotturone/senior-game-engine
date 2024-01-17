@@ -20,7 +20,6 @@ struct EngineSettings {
             // shader source / compile directory paths?
 };
     
-
 class Engine
 {
 public:
@@ -40,8 +39,11 @@ protected:
     Window* m_windowHandler;
     Input* m_inputHandler; 
     Camera* m_camera;
-    Shader* m_shader;
-    Model* m_model;
+    Shader* m_lightShader;
+    Shader* m_objShader;
+
+    Model* m_subject;
+    Model* m_lightSrc;
     
     bool m_isRunning;
 };

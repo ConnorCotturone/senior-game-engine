@@ -36,10 +36,14 @@ void Window::Initialize(int width, int height, const char* title)
 
     glfwMakeContextCurrent(m_window);
     glfwSetFramebufferSizeCallback(m_window, FramebufferSizeCallback);
+
+    m_imguiWindow.Initialize(m_window);
 }
 
 void Window::Update() {
+    m_imguiWindow.StartFrame();
     glfwPollEvents();
+    m_imguiWindow.EndFrame();
 }
 
 bool Window::ShouldClose() const {
@@ -63,4 +67,9 @@ void Window::setCursorPosCallback(GLFWcursorposfun callback)
 void Window::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void Window::Shutdown()
+{
+    m_imguiWindow.Shutdown();
 }

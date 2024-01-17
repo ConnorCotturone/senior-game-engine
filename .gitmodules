@@ -4,3 +4,6 @@
 [submodule "engine/extern/spdlog"]
 	path = engine/extern/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "engine/extern/imgui"]
+	path = engine/extern/imgui
+	url = git@github.com:ocornut/imgui.git
