@@ -25,6 +25,10 @@ Engine::Engine() {
     m_lightSrc = nullptr;
 
     m_isRunning = false;
+    m_imguiActive = false;
+
+    m_timeData.deltaTime = 0.0;
+    m_timeData.lastTime = 0.0;
 }
     
 Engine::~Engine() {
@@ -38,19 +42,17 @@ void Engine::Run() {
 
     m_isRunning = true;
 
-    static double deltaTime = 0.0;
     static double currTime = 0.0;
-    static double lastTime = 0.0;
 
     while (m_isRunning) {
-        while (glfwGetTime() < lastTime + 0.016) { }        // limit fps to 60
+        while (glfwGetTime() < m_timeData.lastTime + 0.016) { }        // limit fps to 60
 
         // frame timing
         currTime = static_cast<float>(glfwGetTime());
-        deltaTime = currTime - lastTime;
-        lastTime = currTime;
+        m_timeData.deltaTime = currTime - m_timeData.lastTime;
+        m_timeData.lastTime = currTime;
 
-        Update(deltaTime);
+        Update();
         Render();
 
         m_windowHandler->SwapBuffers();
@@ -61,10 +63,32 @@ void Engine::Run() {
 void Engine::Initialize() {
     LoggingHandler::Initialize();
     PHX_TRACE("engine - initializing")
-    
-    m_windowHandler = new Window(settings.WindowWidth,
-                                 settings.WindowHeight,
-                                 "engine");
+
+    m_windowHandler = new Window();
+    m_windowHandler->Initialize(settings.WindowWidth,
+                                settings.WindowHeight,
+                                "engine");
+
+    m_eventHandler = new EventHandler(m_windowHandler->GetGLFWWindow());
+    m_eventHandler->RegisterKeyCallback([this](int key, int scancode, int action, int mods) {
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            m_isRunning = false;
+        if (key == GLFW_KEY_M && action == GLFW_PRESS)
+            m_imguiActive = !m_imguiActive;
+
+        if (key == GLFW_KEY_W && action == GLFW_PRESS) 
+            m_camera->KeyboardUpdate(FORWARD, m_timeData.deltaTime);
+        if (key == GLFW_KEY_A && action == GLFW_PRESS) 
+            m_camera->KeyboardUpdate(BACKWARD, m_timeData.deltaTime);
+        if (key == GLFW_KEY_S && action == GLFW_PRESS) 
+            m_camera->KeyboardUpdate(LEFT, m_timeData.deltaTime);
+        if (key == GLFW_KEY_D && action == GLFW_PRESS) 
+            m_camera->KeyboardUpdate(RIGHT, m_timeData.deltaTime);
+    });    
+
+
+    m_imguiHandler = new ImguiHandler();
+    m_imguiHandler->Initialize(m_windowHandler->GetGLFWWindow());
 
     m_inputHandler = new Input(m_windowHandler->GetGLFWWindow());
     glfwSetInputMode(m_windowHandler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -87,29 +111,16 @@ void Engine::Initialize() {
 
 }
 
-void Engine::Update(float deltaTime) {
-
-    // INPUT
-    // check for ESC & exit if pressed
-    m_windowHandler->Update();
-    if (m_inputHandler->isKeyPressed(GLFW_KEY_ESCAPE)) {
-        m_isRunning = false;
-    }
-
-    // keyboard WASD movement updates
-    if (m_inputHandler->isKeyPressed(GLFW_KEY_W)) 
-        m_camera->KeyboardUpdate(FORWARD, deltaTime);
-    if (m_inputHandler->isKeyPressed(GLFW_KEY_S)) 
-        m_camera->KeyboardUpdate(BACKWARD, deltaTime);
-    if (m_inputHandler->isKeyPressed(GLFW_KEY_A)) 
-        m_camera->KeyboardUpdate(LEFT, deltaTime);
-    if (m_inputHandler->isKeyPressed(GLFW_KEY_D)) 
-        m_camera->KeyboardUpdate(RIGHT, deltaTime);
+void Engine::Update() {
+    m_eventHandler->Update();
 
     // mouse / camera updates
     double xoffset, yoffset;
-    m_inputHandler->getMouseOffset(xoffset, yoffset);
-    m_camera->MouseUpdate(xoffset, yoffset, true);
+    if (!m_imguiActive)
+    {
+        m_inputHandler->getMouseOffset(xoffset, yoffset);
+        m_camera->MouseUpdate(xoffset, yoffset, true);
+    }
 }
 
 void Engine::Render() {
@@ -158,13 +169,10 @@ void Engine::Render() {
     light_model_mat = glm::scale(light_model_mat, glm::vec3(0.5f, 0.5f, 0.5f));
     m_lightShader->setMat4("model", light_model_mat);
 
-
     m_lightSrc->Draw(*m_lightShader);
 
-
-    m_windowHandler->Update();
-
-
+    if (m_imguiActive) 
+        m_imguiHandler->Render();
 }
 
 void Engine::Shutdown() {

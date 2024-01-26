@@ -15,8 +15,8 @@ void Sandbox::Initialize() {
     Engine::Initialize();
 }
 
-void Sandbox::Update(float deltaTime) {
-    Engine::Update(deltaTime);
+void Sandbox::Update() {
+    Engine::Update();
 }
 
 void Sandbox::Render() {

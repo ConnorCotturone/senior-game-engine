@@ -13,16 +13,18 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 
 #include "../include/logging.h"
-#include "../include/imguiwindow.h"
 
 class Window {
 public:
-    Window(int width, int height, const char* label);
+    Window();
     ~Window();
 
     void Update();
     bool ShouldClose() const;
     void SwapBuffers();
+
+    void Initialize(int width, int height, const char* label);
+    void Shutdown();
 
     void setKeyCallback(GLFWkeyfun callback);
     void setCursorPosCallback(GLFWcursorposfun callback);
@@ -31,10 +33,6 @@ public:
 
 private:
     GLFWwindow* m_window;
-    ImguiWindow m_imguiWindow;
-
-    void Initialize(int width, int height, const char* label);
-    void Shutdown();
 
 
     static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);

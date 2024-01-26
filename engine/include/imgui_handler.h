@@ -4,18 +4,17 @@
 
 #include <GLFW/glfw3.h>
 
-class ImguiWindow
+class ImguiHandler
 {
 
 public:
-    ImguiWindow() {}
-    ~ImguiWindow() {}
+    ImguiHandler() {}
+    ~ImguiHandler() {}
 
     void Initialize(GLFWwindow* window);
     void Shutdown();
 
-    void StartFrame();
-    void EndFrame();
+    void Render();
 
 private:
 

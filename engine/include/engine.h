@@ -13,11 +13,23 @@
 #include "../include/shader.h"
 #include "../include/camera.h"
 #include "../include/logging.h"
+#include "../include/imgui_handler.h"
+#include "../include/event_handler.h"
 
 struct EngineSettings {
-            int WindowWidth = 800;
-            int WindowHeight = 600;
-            // shader source / compile directory paths?
+    int WindowWidth = 800;
+    int WindowHeight = 600;
+    // shader source / compile directory paths?
+};
+
+struct TimeData {
+    double deltaTime;
+    double lastTime;
+};
+
+struct MouseData {
+    double xoffset;
+    double yoffset;
 };
     
 class Engine
@@ -30,13 +42,18 @@ public:
 
 protected:
     virtual void Initialize();
-    virtual void Update(float deltaTime);
+    virtual void Update();
     virtual void Render();
     virtual void Shutdown();
 
 protected:
     EngineSettings settings;
+    TimeData m_timeData;
+
     Window* m_windowHandler;
+
+    EventHandler* m_eventHandler;
+
     Input* m_inputHandler; 
     Camera* m_camera;
     Shader* m_lightShader;
@@ -44,8 +61,11 @@ protected:
 
     Model* m_subject;
     Model* m_lightSrc;
+
+    ImguiHandler* m_imguiHandler;
     
     bool m_isRunning;
+    bool m_imguiActive;
 };
 
 #endif // ENGINE_H

@@ -33,7 +33,8 @@ add_library(engine STATIC
     include/camera.h
     include/material.h
     include/logging.h
-    include/imguiwindow.h
+    include/imgui_handler.h
+    include/event_handler.h
 
     # source files
     src/engine.cpp
@@ -45,7 +46,8 @@ add_library(engine STATIC
     src/camera.cpp
     src/material.cpp    
     src/logging.cpp
-    src/imguiwindow.cpp
+    src/imgui_handler.cpp
+    src/event_handler.cpp
 
     # glad
     extern/glad/glad.c

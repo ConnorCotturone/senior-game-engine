@@ -7,9 +7,9 @@
 #include "../include/window.h"
 
 
-Window::Window(int width, int height, const char* title)
+Window::Window()
 {
-    Initialize(width, height, title);
+    // do nothing
 }
 
 Window::~Window() 
@@ -37,14 +37,12 @@ void Window::Initialize(int width, int height, const char* title)
     glfwMakeContextCurrent(m_window);
     glfwSetFramebufferSizeCallback(m_window, FramebufferSizeCallback);
 
-    m_imguiWindow.Initialize(m_window);
 }
 
-void Window::Update() {
-    m_imguiWindow.StartFrame();
+void Window::Update() { 
     glfwPollEvents();
-    m_imguiWindow.EndFrame();
 }
+
 
 bool Window::ShouldClose() const {
     return glfwWindowShouldClose(m_window);
@@ -69,7 +67,4 @@ void Window::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void Window::Shutdown()
-{
-    m_imguiWindow.Shutdown();
-}
+void Window::Shutdown() {}

@@ -2,7 +2,7 @@
 // imguiwindow.cpp
 // 01/17/2023
 
-#include "../include/imguiwindow.h"
+#include "../include/imgui_handler.h"
 
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_glfw.h>
@@ -10,17 +10,16 @@
 #include <GLFW/glfw3.h>
 
 
-void ImguiWindow::Initialize(GLFWwindow* window)
+void ImguiHandler::Initialize(GLFWwindow* window)
 {
     IMGUI_CHECKVERSION();
 
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-
 }
 
-void ImguiWindow::Shutdown() 
+void ImguiHandler::Shutdown() 
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -29,15 +28,13 @@ void ImguiWindow::Shutdown()
 
 // void ImguiWindow::HandleEvent()
 
-void ImguiWindow::StartFrame()
+void ImguiHandler::Render()
 {
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-}
 
-void ImguiWindow::EndFrame()
-{
     ImGui::Text("Test 123");
 
     ImGui::Render();
