@@ -7,7 +7,7 @@
 
 
 #include "../include/window.h"
-#include "../include/input.h"
+#include "../include/input_handler.h"
 #include "../include/mesh.h"
 #include "../include/model.h"
 #include "../include/shader.h"
@@ -54,7 +54,7 @@ protected:
 
     EventHandler* m_eventHandler;
 
-    Input* m_inputHandler; 
+    InputHandler* m_inputHandler; 
     Camera* m_camera;
     Shader* m_lightShader;
     Shader* m_objShader;

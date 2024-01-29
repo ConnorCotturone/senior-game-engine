@@ -26,28 +26,45 @@ add_library(engine STATIC
     # include files
     include/engine.h
     include/window.h
-    include/input.h
     include/shader.h
     include/mesh.h
     include/model.h
     include/camera.h
     include/material.h
     include/logging.h
+    include/input_handler.h
     include/imgui_handler.h
     include/event_handler.h
+
+    include/ECS/Entity.h
+    include/ECS/EntityManager.h
+    include/ECS/Component.h
+    include/ECS/IComponentArray.h
+    include/ECS/ComponentManager.h
+    include/ECS/ISystem.h
+    include/ECS/SystemManager.h
+    include/ECS/ECSManager.h
+
+    include/Components/Transform.h
 
     # source files
     src/engine.cpp
     src/window.cpp
-    src/input.cpp
     src/shader.cpp
     src/mesh.cpp
     src/model.cpp
     src/camera.cpp
     src/material.cpp    
     src/logging.cpp
+    src/input_handler.cpp
     src/imgui_handler.cpp
     src/event_handler.cpp
+
+    src/ECS/EntityManager.cpp
+    src/ECS/ComponentManager.cpp
+    src/ECS/IComponentArray.cpp
+    src/ECS/SystemManager.cpp
+    src/ECS/ECSManager.cpp
 
     # glad
     extern/glad/glad.c
@@ -57,6 +74,7 @@ target_link_libraries(engine PUBLIC glfw OpenGL::GL assimp spdlog::spdlog_header
 
 target_include_directories(engine PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/ECS
     ${CMAKE_CURRENT_SOURCE_DIR}/extern
     # ${CMAKE_CURRENT_SOURCE_DIR}/extern/imgui/backends
     # ${CMAKE_CURRENT_SOURCE_DIR}/extern/glm

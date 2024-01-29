@@ -1,1 +1,1 @@
-yes.
+current ECS source : https://austinmorlan.com/posts/entity_component_system/

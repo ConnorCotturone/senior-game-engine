@@ -35,7 +35,9 @@ void ImguiHandler::Render()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Text("Test 123");
+    ImGuiIO& io = ImGui::GetIO();
+
+    ImGui::ShowDemoWindow();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -75,23 +75,13 @@ void Engine::Initialize() {
             m_isRunning = false;
         if (key == GLFW_KEY_M && action == GLFW_PRESS)
             m_imguiActive = !m_imguiActive;
-
-        if (key == GLFW_KEY_W && action == GLFW_PRESS) 
-            m_camera->KeyboardUpdate(FORWARD, m_timeData.deltaTime);
-        if (key == GLFW_KEY_A && action == GLFW_PRESS) 
-            m_camera->KeyboardUpdate(BACKWARD, m_timeData.deltaTime);
-        if (key == GLFW_KEY_S && action == GLFW_PRESS) 
-            m_camera->KeyboardUpdate(LEFT, m_timeData.deltaTime);
-        if (key == GLFW_KEY_D && action == GLFW_PRESS) 
-            m_camera->KeyboardUpdate(RIGHT, m_timeData.deltaTime);
     });    
 
 
     m_imguiHandler = new ImguiHandler();
     m_imguiHandler->Initialize(m_windowHandler->GetGLFWWindow());
 
-    m_inputHandler = new Input(m_windowHandler->GetGLFWWindow());
-    glfwSetInputMode(m_windowHandler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    m_inputHandler = new InputHandler(m_windowHandler->GetGLFWWindow());
 
     // check glad loaded
     PHX_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLAD.");
@@ -114,13 +104,30 @@ void Engine::Initialize() {
 void Engine::Update() {
     m_eventHandler->Update();
 
-    // mouse / camera updates
-    double xoffset, yoffset;
     if (!m_imguiActive)
     {
+        glfwSetInputMode(m_windowHandler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        double xoffset, yoffset;
         m_inputHandler->getMouseOffset(xoffset, yoffset);
         m_camera->MouseUpdate(xoffset, yoffset, true);
+
+
+        // keyboard camera updates
+        if (m_inputHandler->IsKeyPressed(GLFW_KEY_W))
+            m_camera->KeyboardUpdate(FORWARD, m_timeData.deltaTime);
+        if (m_inputHandler->IsKeyPressed(GLFW_KEY_A))
+            m_camera->KeyboardUpdate(LEFT, m_timeData.deltaTime);
+        if (m_inputHandler->IsKeyPressed(GLFW_KEY_S))
+            m_camera->KeyboardUpdate(BACKWARD, m_timeData.deltaTime);
+        if (m_inputHandler->IsKeyPressed(GLFW_KEY_D))
+            m_camera->KeyboardUpdate(RIGHT, m_timeData.deltaTime);
     }
+    else
+    {
+        glfwSetInputMode(m_windowHandler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        m_camera->MouseUpdate((double)0.0, (double)0.0, true);
+    }
+
 }
 
 void Engine::Render() {

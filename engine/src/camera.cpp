@@ -55,6 +55,7 @@ void Camera::MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch 
     updateCameraVectors();
 }
 
+    
 void Camera::updateCameraVectors()
 {
     glm::vec3 front;

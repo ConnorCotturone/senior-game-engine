@@ -34,8 +34,9 @@ public:
     glm::mat4 GetViewMatrix();
     float getZoom() { return Zoom; }
 
-    void KeyboardUpdate(Camera_Movement direction, float deltaTime);
+    void KeyboardUpdate(Camera_Movement direction, float timestep);
     void MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch); 
+
 
 private:
     void updateCameraVectors();
@@ -53,7 +54,6 @@ private:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
-
 };
 
 #endif // CAMERA_H
