@@ -1,5 +1,5 @@
 // jacob curlin
-// ECSManager.h
+// ecs_manager.h
 // 01/28/2024
 
 #ifndef ECSMANAGER_H

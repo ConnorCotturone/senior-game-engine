@@ -2,11 +2,11 @@
 // ISystem.h
 // 01/28/2024
 
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef ISYSTEM_H
+#define ISYSTEM_H
 
+#include "ecs_types.h"
 #include <set>
-#include "entity.h"
 
 namespace ECS
 {
@@ -17,4 +17,4 @@ namespace ECS
     };
 }
 
-#endif // SYSTEM_H
+#endif // ISYSTEM_H

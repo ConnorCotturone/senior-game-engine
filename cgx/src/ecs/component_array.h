@@ -5,8 +5,9 @@
 #ifndef COMPONENTARRAY_H
 #define COMPONENTARRAY_H
 
-#include "entity.h"
+#include "ecs_types.h"
 #include "entity_manager.h"
+#include "../utility/logging.h"
 
 namespace ECS
 {
@@ -65,8 +66,6 @@ namespace ECS
             }
         }
 
-
-
     private:
         std::array<T, MAX_ENTITIES> m_componentArray;
 
@@ -74,10 +73,7 @@ namespace ECS
         std::unordered_map<size_t, Entity> m_indexToEntityMap;
 
         size_t m_size;
-
     };
 }
-
-
 
 #endif // COMPONENTARRAY_H

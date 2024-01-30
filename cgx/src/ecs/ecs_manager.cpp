@@ -1,5 +1,5 @@
 // jacob curlin
-// ECSManager.cpp
+// ecs_manager.cpp
 // 01/28/2024
 
 #include "ecs_manager.h"
@@ -7,9 +7,9 @@
 
 namespace ECS
 {
-    void ECSManager::Initialize()
+    void ECSManager::Initialize()       
     {
-        m_componentManager = std::make_unique<ComponentManager>();
+        m_componentManager = std::make_unique<ComponentManager>();      
         m_entityManager = std::make_unique<EntityManager>();
         m_systemManager = std::make_unique<SystemManager>();
     }

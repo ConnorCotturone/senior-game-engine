@@ -1,18 +1,17 @@
 // jacob curlin
-// EntityManager.h
+// entity_manager.h
 // 01/28/2023
 
 
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
 
+#include "ecs_types.h"
 #include <array>
 #include <bitset>
 #include <queue>
 #include <vector>
 
-#include "component.h"
-#include "entity.h"
 
 namespace ECS
 {

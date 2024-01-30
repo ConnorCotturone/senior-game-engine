@@ -1,4 +1,4 @@
-// ComponentManager.cpp
+// component_manager.cpp
 // jacob curlin
 // 01/26/2023
 

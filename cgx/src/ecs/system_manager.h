@@ -5,8 +5,8 @@
 #ifndef SYSTEMMANAGER_H
 #define SYSTEMMANAGER_H
 
+#include "ecs_types.h"
 #include "i_system.h"
-#include "entity.h"
 #include <memory>
 #include <unordered_map>
 

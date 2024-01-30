@@ -1,17 +1,16 @@
 // jacob curlin
-// ComponentManager.h
+// component_manager.h
 // 01/26/2023
 
 #ifndef COMPONENTMANAGER_H
 #define COMPONENTMANAGER_H
 
+#include "ecs_types.h"
+#include "component_array.h"
+#include "../utility/logging.h"
+
 #include <memory>
 #include <unordered_map>
-
-#include "entity.h"
-#include "component.h"
-#include "i_component_array.h"
-#include "../utility/logging.h"
 
 namespace ECS
 {
@@ -22,7 +21,7 @@ namespace ECS
         template<typename T>
         void RegisterComponent()
         {
-            const char* typeName;
+            const char* typeName = typeid(T).name();
 
             PHX_ASSERT(m_componentTypes.find(typeName) == m_componentTypes.end(), "Registering component type more than once.");
 

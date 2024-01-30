@@ -10,7 +10,6 @@
 #include "window.h"
 #include "input_handler.h"
 #include "imgui_handler.h"
-#include "../components/transform.h"
 #include "../ecs/ecs_manager.h"
 #include "../event/event_handler.h"
 #include "../render/camera.h"
@@ -18,6 +17,9 @@
 #include "../render/model.h"
 #include "../render/shader.h"
 #include "../utility/logging.h"
+
+#include "../components/transform_component.h"
+#include "../components/render_component.h"
 
 struct EngineSettings {
     int WindowWidth = 800;
@@ -60,14 +62,10 @@ protected:
 
     InputHandler* m_inputHandler; 
     Camera* m_camera;
-    Shader* m_lightShader;
-    Shader* m_objShader;
-
-    Model* m_subject;
-    Model* m_lightSrc;
 
     ImguiHandler* m_imguiHandler;
     
+    std::vector<ECS::Entity> m_entities;
     bool m_isRunning;
     bool m_imguiActive;
 };

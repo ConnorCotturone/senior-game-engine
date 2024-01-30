@@ -42,10 +42,9 @@ target_sources(cgx
 
     # ECS
     PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/component.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/entity.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/ecs_types.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/i_system.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/i_component_array.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/component_array.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/component_manager.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/entity_manager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/system_manager.h
@@ -84,7 +83,8 @@ target_sources(cgx
 
     # Components
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/Transform.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/transform_component.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/render_component.h
 
     # glad
     PRIVATE
