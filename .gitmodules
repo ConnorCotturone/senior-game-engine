@@ -1,9 +1,9 @@
-[submodule "engine/extern/assimp"]
-	path = engine/extern/assimp
-	url = https://github.com/assimp/assimp.git
-[submodule "engine/extern/spdlog"]
-	path = engine/extern/spdlog
+[submodule "cgx/external/spdlog"]
+	path = cgx/external/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "engine/extern/imgui"]
-	path = engine/extern/imgui
+[submodule "cgx/external/imgui"]
+	path = cgx/external/imgui
 	url = git@github.com:ocornut/imgui.git
+[submodule "cgx/external/assimp"]
+	path = cgx/external/assimp
+	url = git@github.com:assimp/assimp.git
