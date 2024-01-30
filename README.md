@@ -1,3 +1,7 @@
-### cgx : curlin graphics engine
+## cgx : curlin graphics engine
 
-current ECS source : https://austinmorlan.com/posts/entity_component_system/
+an excercise in patience
+
+### notes
+ 
+- current ECS source : https://austinmorlan.com/posts/entity_component_system/
