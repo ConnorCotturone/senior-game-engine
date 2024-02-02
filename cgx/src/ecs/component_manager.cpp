@@ -5,7 +5,7 @@
 #include "component_manager.h"
 #include "../utility/logging.h"
 
-namespace ECS
+namespace cgx::ecs
 {
     void ComponentManager::EntityDestroyed(Entity entity)
     {

@@ -5,7 +5,7 @@
 #include "entity_manager.h"
 #include "../utility/logging.h"
 
-namespace ECS
+namespace cgx::ecs
 {
 
     EntityManager::EntityManager()   // initialize vector of MAX_ENTITIES   

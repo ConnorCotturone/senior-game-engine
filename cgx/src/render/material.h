@@ -9,25 +9,28 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
-class Material
+namespace cgx::graphics
 {
-public:
-    Material(glm::vec3 diffuse, glm::vec3 specular, GLint diffuseMap, GLint specularMap, bool useDiffuseMap, bool useSpecularMap); 
-    ~Material();
+    class Material
+    {
+    public:
+        Material(glm::vec3 diffuse, glm::vec3 specular, GLint diffuseMap, GLint specularMap, bool useDiffuseMap, bool useSpecularMap); 
+        ~Material();
 
-    void Bind(Shader &shader);
+        void Bind(Shader &shader);
 
-private:
-    glm::vec3 m_diffuse;
-    glm::vec3 m_specular;
+    private:
+        glm::vec3 m_diffuse;
+        glm::vec3 m_specular;
 
-    GLint m_diffuseMap;
-    GLint m_specularMap;
+        GLint m_diffuseMap;
+        GLint m_specularMap;
 
-    bool m_useDiffuseMap;
-    bool m_useSpecularMap;
+        bool m_useDiffuseMap;
+        bool m_useSpecularMap;
 
-};
+    };
 
+}
 
 #endif // MATERIAL_H

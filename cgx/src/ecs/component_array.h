@@ -9,7 +9,7 @@
 #include "entity_manager.h"
 #include "../utility/logging.h"
 
-namespace ECS
+namespace cgx::ecs
 {
     class IComponentArray
     {

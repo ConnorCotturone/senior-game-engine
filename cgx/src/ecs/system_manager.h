@@ -11,7 +11,7 @@
 #include <unordered_map>
 
 
-namespace ECS
+namespace cgx::ecs
 {
 
     class SystemManager

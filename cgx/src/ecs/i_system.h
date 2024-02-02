@@ -8,7 +8,7 @@
 #include "ecs_types.h"
 #include <set>
 
-namespace ECS
+namespace cgx::ecs
 {
     class System
     {

@@ -3,6 +3,8 @@
 // 12/30/2023 
 
 #include "../include/sandbox.h"
+#include "../include/primitives.h"
+
 
 // temp
 #include <iostream>
@@ -21,6 +23,8 @@ void Sandbox::Initialize() {
     
     std::__fs::filesystem::path model_obj_path = data_dir / "soccerball/ball.obj";
     std::__fs::filesystem::path light_obj_path = data_dir / "objects/light_cube/light_cube.obj"; 
+
+    std::__fs::filesystem::path grid_texture_path = data_dir / "grid.jpg"; 
 
     std::__fs::filesystem::path model_vs_path = shader_dir / "model.vs";
     std::__fs::filesystem::path model_fs_path = shader_dir / "model.fs";
@@ -73,6 +77,23 @@ void Sandbox::Initialize() {
             .scale =    glm::vec3(0.5f, 0.5f, 0.5f)
         });
      
+    unsigned int planeVAO, planeVBO;
+    glGenVertexArrays(1, &planeVAO);
+    glGenBuffers(1, &planeVBO);
+    glBindVertexArray(planeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
+
+    std::string grid_texture_path_str = grid_texture_path.string();
+    std::string grid_texture_path_dir = grid_texture_path_str.substr(0, grid_texture_path_str.find_last_of('/'));
+    std::string grid_texture_path_fname = "grid.jpg";
+
+    unsigned int planeTexture = TextureFromFile(grid_texture_path_fname.c_str(), grid_texture_path_dir, false);
+
     m_wireframe_shader = new Shader(light_vs_path.c_str(), wireframe_fs_path.c_str());
 
     glEnable(GL_DEPTH_TEST);

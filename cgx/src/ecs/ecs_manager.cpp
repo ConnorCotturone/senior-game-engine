@@ -5,7 +5,7 @@
 #include "ecs_manager.h"
 #include <memory>
 
-namespace ECS
+namespace cgx::ecs
 {
     void ECSManager::Initialize()       
     {

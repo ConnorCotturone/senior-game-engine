@@ -13,7 +13,7 @@
 #include <vector>
 
 
-namespace ECS
+namespace cgx::ecs
 {
     class EntityManager {
     public:
@@ -22,7 +22,7 @@ namespace ECS
         Entity CreateEntity();
         void DestroyEntity(Entity entity);
         void SetSignature(Entity entity, Signature signature);
-        ECS::Signature GetSignature(Entity entity);
+        Signature GetSignature(Entity entity);
 
     private:
         std::queue<Entity> m_availableEntities{};

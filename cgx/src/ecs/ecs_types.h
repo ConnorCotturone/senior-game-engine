@@ -8,7 +8,7 @@
 
 #include <bitset>
 
-namespace ECS
+namespace cgx::ecs
 {
     using Entity = std::uint32_t;
     const Entity MAX_ENTITIES = 5000;

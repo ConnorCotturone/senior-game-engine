@@ -69,6 +69,8 @@ target_sources(cgx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/mesh.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/model.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/shader.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/texture.h 
+
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/camera.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/framebuffer.cpp
@@ -76,6 +78,7 @@ target_sources(cgx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/mesh.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/model.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/shader.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/texture.cpp 
 
     # Utility
     PUBLIC

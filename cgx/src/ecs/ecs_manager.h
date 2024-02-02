@@ -9,7 +9,7 @@
 #include "system_manager.h"
 #include "component_manager.h"
 
-namespace ECS
+namespace cgx::ecs
 {
     class ECSManager
     {

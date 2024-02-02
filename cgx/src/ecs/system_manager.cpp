@@ -5,7 +5,7 @@
 #include "system_manager.h"
 #include "../utility/logging.h"
 
-namespace ECS
+namespace cgx::ecs
 {
     template<typename T>
     std::shared_ptr<T> SystemManager::RegisterSystem()
