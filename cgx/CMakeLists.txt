@@ -64,12 +64,14 @@ target_sources(cgx
     # Render
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/camera.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/framebuffer.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/material.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/mesh.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/model.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/shader.h 
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/camera.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/framebuffer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/material.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/mesh.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/model.cpp 

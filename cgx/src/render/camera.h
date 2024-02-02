@@ -32,6 +32,8 @@ public:
 
     glm::mat4 GetViewMatrix();
     float getZoom() { return Zoom; }
+    glm::vec3 getPosition() { return Position; }
+    glm::vec3 getFront() { return Front; }
 
     void KeyboardUpdate(Camera_Movement direction, float timestep);
     void MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch); 

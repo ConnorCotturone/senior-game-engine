@@ -7,6 +7,7 @@
 
 #include <string>
 #include "cpgx.h"
+#include "grid.h"
 
 class Sandbox : public Engine
 {
@@ -19,9 +20,13 @@ protected:
     void Initialize() override;
     void Update() override;
     void Render() override;
+    void ImguiRender();
     void Shutdown() override;
 
     std::string message;
+
+private:
+    Shader* m_wireframe_shader;
 
 };
 

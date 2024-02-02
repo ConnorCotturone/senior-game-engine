@@ -26,12 +26,16 @@ void ImguiHandler::Shutdown()
 
 // void ImguiWindow::HandleEvent()
 
-void ImguiHandler::Render()
+void ImguiHandler::BeginRender()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+}
 
+
+void ImguiHandler::EndRender()
+{
     ImGuiIO& io = ImGui::GetIO();
 
     ImGui::Render();

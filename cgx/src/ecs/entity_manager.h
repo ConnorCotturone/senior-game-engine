@@ -15,8 +15,6 @@
 
 namespace ECS
 {
-    const Entity MAX_ENTITIES = 5000;
-
     class EntityManager {
     public:
         EntityManager();

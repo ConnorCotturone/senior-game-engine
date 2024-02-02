@@ -22,7 +22,8 @@ public:
     void Initialize(GLFWwindow* window);
     void Shutdown();
 
-    void Render();
+    void BeginRender();
+    void EndRender();
 };
 
 #endif // IMGUIHANDLER_H
