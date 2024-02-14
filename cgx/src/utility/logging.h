@@ -28,19 +28,21 @@ namespace cgx::utility
 
     };
 
-    #define CGX_DEFAULT_LOGGER_NAME "core"
-
-    #define CGX_TRACE(...)      if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);}
-    #define CGX_DEBUG(...)      if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->debug(__VA_ARGS__);}
-    #define CGX_INFO(...)       if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->info(__VA_ARGS__);}
-    #define CGX_WARN(...)       if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->warn(__VA_ARGS__);}
-    #define CGX_ERROR(...)      if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->error(__VA_ARGS__);}
-    #define CGX_CRITICAL(...)   if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->critical(__VA_ARGS__);}
-
-    // x : condition being asserted  |  msg : message to print upon failure of assertion
-    //  {} : (do nothing)   |  
-    #define CGX_ASSERT(x, msg) if ((x)) {} else {CGX_CRITICAL("ASSERT - {}\n\t{}\n\tin file: {}\n\ton line: {}", #x, msg, __FILE__, __LINE__); }  
-
 }
+
+
+#define CGX_DEFAULT_LOGGER_NAME "core"
+
+#define CGX_TRACE(...)      if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);}
+#define CGX_DEBUG(...)      if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->debug(__VA_ARGS__);}
+#define CGX_INFO(...)       if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->info(__VA_ARGS__);}
+#define CGX_WARN(...)       if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->warn(__VA_ARGS__);}
+#define CGX_ERROR(...)      if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->error(__VA_ARGS__);}
+#define CGX_CRITICAL(...)   if (spdlog::get(CGX_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CGX_DEFAULT_LOGGER_NAME)->critical(__VA_ARGS__);}
+
+// x : condition being asserted  |  msg : message to print upon failure of assertion
+//  {} : (do nothing)   |  
+#define CGX_ASSERT(x, msg) if ((x)) {} else {CGX_CRITICAL("ASSERT - {}\n\t{}\n\tin file: {}\n\ton line: {}", #x, msg, __FILE__, __LINE__); }  
+
 
 #endif // LOGGING_H

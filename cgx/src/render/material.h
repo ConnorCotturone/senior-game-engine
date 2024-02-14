@@ -6,6 +6,7 @@
 #define MATERIAL_H
 
 #include "shader.h"
+#include "texture.h"
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
@@ -14,23 +15,25 @@ namespace cgx::graphics
     class Material
     {
     public:
-        Material(glm::vec3 diffuse, glm::vec3 specular, GLint diffuseMap, GLint specularMap, bool useDiffuseMap, bool useSpecularMap); 
+        Material(std::string id); 
         ~Material();
 
-        void Bind(Shader &shader);
+        void bind(Shader &shader);
 
     private:
-        glm::vec3 m_diffuse;
-        glm::vec3 m_specular;
+        std::string m_id;
 
-        GLint m_diffuseMap;
-        GLint m_specularMap;
+        glm::vec3 m_ambientColor;
+        glm::vec3 m_diffuseColor;
+        glm::vec3 m_specularColor;
+        float m_shininess;
 
-        bool m_useDiffuseMap;
-        bool m_useSpecularMap;
-
+        std::shared_ptr<Texture> m_ambientMap;
+        std::shared_ptr<Texture> m_diffuseMap;
+        std::shared_ptr<Texture> m_specularMap;
+        std::shared_ptr<Texture> m_normalMap;
     };
 
 }
 
-#endif // MATERIAL_H
+#endif // MATERIAL_H 

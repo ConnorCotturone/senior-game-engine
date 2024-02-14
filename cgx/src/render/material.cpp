@@ -7,13 +7,20 @@
 namespace cgx::graphics
 {
 
-    Material::Material(glm::vec3 diffuse, glm::vec3 specular, GLint diffuseMap, GLint specularMap, bool useDiffuseMap, bool useSpecularMap) 
-        : m_diffuse(diffuse), m_specular(specular), m_diffuseMap(diffuseMap), m_specularMap(specularMap), 
-        m_useDiffuseMap(useDiffuseMap), m_useSpecularMap(useSpecularMap) {}
+    Material::Material(std::string id)
+        : m_id(id)
+        , m_ambientColor()
+        , m_diffuseColor()
+        , m_specularColor()
+        , m_shininess()
+        , m_ambientMap()
+        , m_diffuseMap()
+        , m_specularMap()
+        , m_normalMap() {}
         
     Material::~Material() {};
 
-    void Material::Bind(Shader &shader) 
+    void Material::bind(Shader &shader) 
     {
 
         shader.setBool("material.useDiffuseMap", m_useDiffuseMap);

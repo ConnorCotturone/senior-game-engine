@@ -2,12 +2,10 @@
 // framebuffer.cpp
 // 01/30/2024
 
-
 #include "framebuffer.h"
 
 #include "glad/glad.h"
 #include "../utility/logging.h"
-
 
 namespace cgx::graphics
 {
@@ -43,7 +41,7 @@ namespace cgx::graphics
         int32_t completeStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (completeStatus != GL_FRAMEBUFFER_COMPLETE)
         {
-            PHX_ERROR("Failure to create framebuffer. Complete status: {}", completeStatus)
+            CGX_ERROR("Failure to create framebuffer. Complete status: {}", completeStatus)
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -93,9 +91,4 @@ namespace cgx::graphics
         b = m_CCB;
         a = m_CCA;
     }
-
-
-
-
-
 }

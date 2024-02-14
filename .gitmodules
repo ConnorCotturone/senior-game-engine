@@ -7,3 +7,6 @@
 [submodule "cgx/external/assimp"]
 	path = cgx/external/assimp
 	url = git@github.com:assimp/assimp.git
+[submodule "cgx/external/tinyobjloader"]
+	path = cgx/external/tinyobjloader
+	url = git@github.com:tinyobjloader/tinyobjloader.git

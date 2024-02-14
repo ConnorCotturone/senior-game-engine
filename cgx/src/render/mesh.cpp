@@ -7,14 +7,13 @@
 namespace cgx::graphics
 {
 
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material)
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::shared_ptr<Material> material)
         : m_vertices(vertices), m_indices(indices), m_material(material)
     {
         Initialize();
     }
 
     Mesh::~Mesh() {}
-
 
     void Mesh::Initialize()
     {
@@ -36,23 +35,23 @@ namespace cgx::graphics
 
         // vertex data : position vectors
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0); 
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, position)); 
 
         // vertex data : normal vectors
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, Normal));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, normal));
 
         // vertex data: texture coordinates
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, TexCoords));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, texCoord));
 
         glBindVertexArray(0);   // unbind any bound vertex arrays
     }
 
 
-    void Mesh::Draw(Shader &shader)
+    void Mesh::draw(Shader &shader)
     {
-        m_material.Bind(shader);    
+        m_material->bind(shader);    
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
