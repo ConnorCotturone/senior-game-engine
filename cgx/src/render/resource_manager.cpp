@@ -9,6 +9,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tinyobjloader/tiny_obj_loader.h"
+
 #include <sstream>
 #include <iomanip>
 
@@ -86,7 +89,7 @@ namespace cgx::graphics
 
 
         tinyobj::ObjReaderConfig reader_config;
-        reader_config.mtl_search_path = "./";
+        reader_config.mtl_search_path = "";
 
         tinyobj::ObjReader reader;
 
@@ -99,7 +102,7 @@ namespace cgx::graphics
             exit(1);
         }
 
-        if (reader.Warning().empty())
+        if (!reader.Warning().empty())
         {
             CGX_WARN("TinyObjReader: {}", reader.Warning())
         }
@@ -146,67 +149,79 @@ namespace cgx::graphics
         }
 
         std::vector<std::shared_ptr<Mesh>> meshes;
+        size_t last_material_id = 0;
 
-        for (const auto& shape: shapes)
+
+        std::unordered_map<unsigned int, std::vector<Vertex>> material_to_vertices;
+        std::unordered_map<unsigned int, std::vector<unsigned int>> material_to_indices;
+
+        // iterate shapes 
+        for (size_t s = 0; s < shapes.size(); s++)
         {
-            std::vector<Vertex> vertices;
-            std::unordered_map<Vertex, uint32_t> unique_vertices{};
-            std::vector<unsigned int> indices;
-
-            // create material id ( {.obj model path}_{material name} )
-            std::ostringstream materialIdStream;
-            materialIdStream << path << "_" << materials[shape.mesh.material_ids[0]].name;
-            std::string materialId = materialIdStream.str();
-
-            std::shared_ptr<Material> material = m_materials[materialId];
-
             size_t index_offset = 0;
-            size_t num_faces = shape.mesh.num_face_vertices.size();
-            for (size_t f = 0; f < num_faces; f++)                                                  // iterate faces
+            unsigned int material_id;
+            for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)                                                  // iterate faces
             {
-                size_t num_vertices = size_t(shape.mesh.num_face_vertices[f]);
-
-                for (size_t v = 0; v < num_vertices; v++)                                           // iterate vertices
+                // check if material ID is new and initialize it in material maps if so
+                material_id = shapes[s].mesh.material_ids[f];
+                if (material_to_vertices.find(material_id) == material_to_vertices.end())
                 {
-                    tinyobj::index_t idx = shape.mesh.indices[index_offset + v];
+                    material_to_vertices[material_id] = std::vector<Vertex>();
+                    material_to_indices[material_id] = std::vector<unsigned int>();
+                }
 
+                // process face's vertices
+                size_t fv = shapes[s].mesh.num_face_vertices[f];
+                for (size_t v = 0; v < fv; v++)
+                {
+                    tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
                     Vertex vertex;
-                    glm::vec3 data;
 
-                    data.x = attrib.vertices[3*size_t(idx.vertex_index)+0];
-                    data.y = attrib.vertices[3*size_t(idx.vertex_index)+1]; 
-                    data.z = attrib.vertices[3*size_t(idx.vertex_index)+2]; 
-                    vertex.position = data;
-                    
+                    // get current vertex position vector {x,y,z}
+                    vertex.position = glm::vec3(
+                        attrib.vertices[3 * size_t(idx.vertex_index) + 0],
+                        attrib.vertices[3 * size_t(idx.vertex_index) + 1], 
+                        attrib.vertices[3 * size_t(idx.vertex_index) + 2] 
+                    );
+
+                    // if present, get current vertex normal vector {x,y,z}
                     if (idx.normal_index >= 0)
                     {
-                        data.x = attrib.normals[3*size_t(idx.normal_index)+0];
-                        data.y = attrib.normals[3*size_t(idx.normal_index)+1];
-                        data.z = attrib.normals[3*size_t(idx.normal_index)+2];
-                        vertex.normal = data;
+                        vertex.normal = glm::vec3(
+                            attrib.normals[3 * size_t(idx.normal_index) + 0],
+                            attrib.normals[3 * size_t(idx.normal_index) + 1],
+                            attrib.normals[3 * size_t(idx.normal_index) + 2]
+                        );
                     }
 
+                    // if present, get current vertex texture (uv) coordinates {u,v}
                     if (idx.texcoord_index >= 0)
                     {
-                        data.x = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
-                        data.y = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
-                        vertex.texCoord = glm::vec2(data.x, data.y);
+                        vertex.texCoord = glm::vec2(
+                            attrib.texcoords[2 * size_t(idx.texcoord_index) + 0],
+                            attrib.texcoords[2 * size_t(idx.texcoord_index) + 1]
+                        );
                     }
 
-                    if (unique_vertices.count(vertex) == 0)
-                    {
-                        unique_vertices[vertex] = static_cast<uint32_t>(vertices.size());
-                        vertices.push_back(vertex);
-                    }
-
-                    indices.push_back(unique_vertices[vertex]);
+                    material_to_vertices[material_id].push_back(vertex);      
+                    // add index of vertex (within its by-material vertex vector) to its by-material index vector
+                    material_to_indices[material_id].push_back(material_to_vertices[material_id].size() - 1);   
                 }
-                index_offset += num_vertices;
+                index_offset += fv;
             }
-
-            Mesh mesh(vertices, indices, material);
-            meshes.push_back(std::make_shared<Mesh>(mesh));
         }
+
+        for (auto& [material_id, vertices] : material_to_vertices) 
+        {
+            std::string material_id_str = path + "_" + materials[material_id].name;
+            std::shared_ptr<cgx::graphics::Material> material = m_materials[material_id_str];
+
+            std::vector<unsigned int>& indices = material_to_indices[material_id];
+            
+            auto mesh = std::make_shared<cgx::graphics::Mesh>(vertices, indices, material);
+            meshes.push_back(mesh);
+        }
+
         std::shared_ptr<Model> model = std::make_shared<Model>(meshes);
         m_models[path] = model;
         return model;

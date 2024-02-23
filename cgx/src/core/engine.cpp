@@ -59,6 +59,9 @@ void Engine::Initialize() {
                                 m_settings.WindowHeight,
                                 "engine");
 
+
+    m_inputHandler = new InputHandler(m_windowHandler->GetGLFWWindow());
+
     m_eventHandler = new cgx::event::EventHandler(m_windowHandler->GetGLFWWindow());
     m_eventHandler->RegisterKeyCallback([this](int key, int scancode, int action, int mods) {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -67,12 +70,15 @@ void Engine::Initialize() {
             m_imguiActive = !m_imguiActive;
     });    
 
-    m_imguiHandler = new ImguiHandler();
-    m_imguiHandler->Initialize(m_windowHandler->GetGLFWWindow());
-
-    m_inputHandler = new InputHandler(m_windowHandler->GetGLFWWindow());
+    m_ecsHandler = new cgx::ecs::ECSManager();
+    m_ecsHandler->Initialize();
+    m_ecsHandler->RegisterComponent<TransformComponent>();
+    m_ecsHandler->RegisterComponent<RenderComponent>();
 
     m_resource_manager = new cgx::graphics::ResourceManager();
+
+    m_imguiHandler = new ImguiHandler();
+    m_imguiHandler->Initialize(m_windowHandler->GetGLFWWindow());
 
     // check glad loaded
     CGX_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLAD.");

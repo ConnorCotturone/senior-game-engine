@@ -10,7 +10,6 @@
 #include "texture.h"
 #include "model.h"
 
-#include "tinyobjloader/tiny_obj_loader.h"
 
 #include <string>
 #include <memory>

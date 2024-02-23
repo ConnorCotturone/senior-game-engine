@@ -20,7 +20,6 @@ namespace cgx::graphics
     {
     public:
         Model(std::vector<std::shared_ptr<Mesh>> meshes);
-        ~Model();
 
         void draw(Shader& shader);
 
