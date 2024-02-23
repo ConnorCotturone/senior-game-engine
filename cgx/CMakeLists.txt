@@ -64,7 +64,6 @@ target_sources(cgx
     # Render
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/camera.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/framebuffer.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/material.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/mesh.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/model.h 
@@ -74,7 +73,6 @@ target_sources(cgx
 
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/camera.cpp 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/framebuffer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/material.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/mesh.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/model.cpp 
@@ -115,7 +113,7 @@ target_include_directories(cgx
 
 )
 
-target_link_libraries(cgx PUBLIC glfw OpenGL::GL assimp spdlog::spdlog_header_only imgui)
+target_link_libraries(cgx PUBLIC glfw OpenGL::GL spdlog::spdlog_header_only imgui)
 
 set(SHADER_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/shaders")
 set(DATA_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/data")

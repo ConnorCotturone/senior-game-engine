@@ -3,11 +3,8 @@
 // 02/02/2024
 
 #include "texture.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
-#include "glad/glad.h"
 #include "../utility/logging.h"
+#include "stb/stb_image.h"
 
 namespace cgx::graphics
 {

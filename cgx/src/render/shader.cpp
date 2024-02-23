@@ -7,12 +7,17 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <filesystem>
+
+using fs_path = std::filesystem::path;
 
 namespace cgx::graphics
 {
 
-    Shader::Shader(const char* vertPath, const char* fragPath)
+    Shader::Shader(const std::string& shader_dir_path, const std::string& vert_filename, const std::string& frag_filename)
     {
+        fs_path vert_path = fs_path(shader_dir_path) / vert_filename;
+        fs_path frag_path = fs_path(shader_dir_path) / frag_filename;
         std::string vertCode, fragCode;       // strings for holding shader code
 
         std::ifstream vShaderFile, fShaderFile;     // filestreams for reading in shader code
@@ -23,8 +28,8 @@ namespace cgx::graphics
         try
         {
             // open files w/ shader code
-            vShaderFile.open(vertPath);
-            fShaderFile.open(fragPath);
+            vShaderFile.open(vert_path);
+            fShaderFile.open(frag_path);
 
             // read file contents into stringstreams
             std::stringstream vShaderStream;

@@ -11,8 +11,8 @@
 
 struct RenderComponent
 {
-    Model* model;
-    Shader* shader;
+    std::shared_ptr<cgx::graphics::Model> model;
+    std::shared_ptr<cgx::graphics::Shader> shader;
 };
 
 

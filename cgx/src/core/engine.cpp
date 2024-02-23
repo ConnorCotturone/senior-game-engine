@@ -51,15 +51,15 @@ void Engine::Run() {
 }
 
 void Engine::Initialize() {
-    LoggingHandler::Initialize();
-    PHX_TRACE("engine - initializing")
+    cgx::utility::LoggingHandler::Initialize();
+    CGX_TRACE("engine - initializing")
 
     m_windowHandler = new Window();
-    m_windowHandler->Initialize(settings.WindowWidth,
-                                settings.WindowHeight,
+    m_windowHandler->Initialize(m_settings.WindowWidth,
+                                m_settings.WindowHeight,
                                 "engine");
 
-    m_eventHandler = new EventHandler(m_windowHandler->GetGLFWWindow());
+    m_eventHandler = new cgx::event::EventHandler(m_windowHandler->GetGLFWWindow());
     m_eventHandler->RegisterKeyCallback([this](int key, int scancode, int action, int mods) {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
             m_isRunning = false;
@@ -72,14 +72,15 @@ void Engine::Initialize() {
 
     m_inputHandler = new InputHandler(m_windowHandler->GetGLFWWindow());
 
+    m_resource_manager = new cgx::graphics::ResourceManager();
+
     // check glad loaded
-    PHX_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLAD.");
+    CGX_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLAD.");
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) { exit(1); }
 
     glEnable(GL_DEPTH_TEST);
-    stbi_set_flip_vertically_on_load(true);
 
-    m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    m_camera = new cgx::graphics::Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 }
 
@@ -95,13 +96,13 @@ void Engine::Update() {
 
         // keyboard camera updates
         if (m_inputHandler->IsKeyPressed(GLFW_KEY_W))
-            m_camera->KeyboardUpdate(FORWARD, m_timeData.deltaTime);
+            m_camera->KeyboardUpdate(cgx::graphics::FORWARD, m_timeData.deltaTime);
         if (m_inputHandler->IsKeyPressed(GLFW_KEY_A))
-            m_camera->KeyboardUpdate(LEFT, m_timeData.deltaTime);
+            m_camera->KeyboardUpdate(cgx::graphics::LEFT, m_timeData.deltaTime);
         if (m_inputHandler->IsKeyPressed(GLFW_KEY_S))
-            m_camera->KeyboardUpdate(BACKWARD, m_timeData.deltaTime);
+            m_camera->KeyboardUpdate(cgx::graphics::BACKWARD, m_timeData.deltaTime);
         if (m_inputHandler->IsKeyPressed(GLFW_KEY_D))
-            m_camera->KeyboardUpdate(RIGHT, m_timeData.deltaTime);
+            m_camera->KeyboardUpdate(cgx::graphics::RIGHT, m_timeData.deltaTime);
     }
     else
     {
@@ -111,7 +112,11 @@ void Engine::Update() {
 
 }
 
-void Engine::Render() {}
+void Engine::Render() 
+{
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+}
 
 
 void Engine::Shutdown() {

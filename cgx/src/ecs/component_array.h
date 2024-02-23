@@ -24,7 +24,7 @@ namespace cgx::ecs
     public:
         void InsertData(Entity entity, T component)
         {
-            PHX_ASSERT(m_entityToIndexMap.find(entity) == m_entityToIndexMap.end(), "Component added to same entity more than once.");
+            CGX_ASSERT(m_entityToIndexMap.find(entity) == m_entityToIndexMap.end(), "Component added to same entity more than once.");
 
             size_t newIndex = m_size;
             m_entityToIndexMap[entity] = newIndex;
@@ -35,7 +35,7 @@ namespace cgx::ecs
 
         void RemoveData(Entity entity) 
         {
-            PHX_ASSERT(m_entityToIndexMap.find(entity) != m_entityToIndexMap.end(), "Removing non-existent component.");
+            CGX_ASSERT(m_entityToIndexMap.find(entity) != m_entityToIndexMap.end(), "Removing non-existent component.");
             
             size_t indexOfRemovedEntity = m_entityToIndexMap[entity];
             size_t indexOfLastElement = m_size - 1;
@@ -53,7 +53,7 @@ namespace cgx::ecs
 
         T& GetData(Entity entity)
         {
-            PHX_ASSERT(m_entityToIndexMap.find(entity) != m_entityToIndexMap.end(), "Retreiving non-existent component.");
+            CGX_ASSERT(m_entityToIndexMap.find(entity) != m_entityToIndexMap.end(), "Retreiving non-existent component.");
 
             return m_componentArray[m_entityToIndexMap[entity]];
         }

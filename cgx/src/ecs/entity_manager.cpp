@@ -18,7 +18,7 @@ namespace cgx::ecs
 
     Entity EntityManager::CreateEntity()    // fetch first unused entity from entity vector
     {
-        PHX_ASSERT(m_activeEntityCount < MAX_ENTITIES, "Too many active entities.")
+        CGX_ASSERT(m_activeEntityCount < MAX_ENTITIES, "Too many active entities.")
 
         Entity id = m_availableEntities.front();        // fetch 
         m_availableEntities.pop();
@@ -29,7 +29,7 @@ namespace cgx::ecs
 
     void EntityManager::DestroyEntity(Entity entity)
     {
-        PHX_ASSERT(entity < MAX_ENTITIES, "Entity out of range.");
+        CGX_ASSERT(entity < MAX_ENTITIES, "Entity out of range.");
 
         m_signatures[entity].reset();   // reset entity's signature (bitset) 
 
@@ -39,14 +39,14 @@ namespace cgx::ecs
 
     void EntityManager::SetSignature(Entity entity, Signature signature)
     {
-        PHX_ASSERT(entity < MAX_ENTITIES, "Entity out of range.");
+        CGX_ASSERT(entity < MAX_ENTITIES, "Entity out of range.");
 
         m_signatures[entity] = signature;
     }
 
     Signature EntityManager::GetSignature(Entity entity)
     {
-        PHX_ASSERT(entity < MAX_ENTITIES, "Entity out of range.");
+        CGX_ASSERT(entity < MAX_ENTITIES, "Entity out of range.");
 
         return m_signatures[entity];
     }

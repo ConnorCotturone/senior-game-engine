@@ -23,7 +23,7 @@ namespace cgx::ecs
         {
             const char* typeName = typeid(T).name();
 
-            PHX_ASSERT(m_componentTypes.find(typeName) == m_componentTypes.end(), "Registering component type more than once.");
+            CGX_ASSERT(m_componentTypes.find(typeName) == m_componentTypes.end(), "Registering component type more than once.");
 
             m_componentTypes.insert({typeName, m_nextComponentType});
             m_componentArrays.insert({typeName, std::make_shared<ComponentArray<T>>()});
@@ -36,7 +36,7 @@ namespace cgx::ecs
         {
             const char* typeName = typeid(T).name();
 
-            PHX_ASSERT(m_componentTypes.find(typeName) != m_componentTypes.end(), "Component not registered before use.");
+            CGX_ASSERT(m_componentTypes.find(typeName) != m_componentTypes.end(), "Component not registered before use.");
 
             return m_componentTypes[typeName];
         }
@@ -71,7 +71,7 @@ namespace cgx::ecs
         {
             const char* typeName = typeid(T).name();
 
-            PHX_ASSERT(m_componentTypes.find(typeName) != m_componentTypes.end(), "Component not registered before use.");
+            CGX_ASSERT(m_componentTypes.find(typeName) != m_componentTypes.end(), "Component not registered before use.");
 
             return std::static_pointer_cast<ComponentArray<T>>(m_componentArrays[typeName]);
         }

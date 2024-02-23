@@ -7,6 +7,9 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+
+#include "glad/glad.h"
+
 #include <string>
 #include <cstdint>
 
@@ -37,7 +40,6 @@ namespace cgx::graphics
         void SetTextureFilter(TextureFilter filter);
 
     private:
-        TextureFilter m_filter;
 
         std::string m_id;
         uint32_t m_width; 
@@ -47,6 +49,9 @@ namespace cgx::graphics
 
         unsigned char* m_pixels;
         GLenum m_format;
+
+
+        TextureFilter m_filter;
     };
 }
 

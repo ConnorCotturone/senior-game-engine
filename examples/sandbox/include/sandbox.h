@@ -7,7 +7,6 @@
 
 #include <string>
 #include "cpgx.h"
-#include "grid.h"
 
 class Sandbox : public Engine
 {
@@ -24,9 +23,6 @@ protected:
     void Shutdown() override;
 
     std::string message;
-
-private:
-    Shader* m_wireframe_shader;
 
 };
 

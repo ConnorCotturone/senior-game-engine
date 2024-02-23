@@ -12,7 +12,7 @@ namespace cgx::ecs
     {
         const char* typeName = typeid(T).name();
 
-        PHX_ASSERT(m_systems.find(typeName) == m_systems.end(), "Registering system more than once.");
+        CGX_ASSERT(m_systems.find(typeName) == m_systems.end(), "Registering system more than once.");
 
         auto system = std::make_shared<T>();
         m_systems.insert({typeName, system});
@@ -24,7 +24,7 @@ namespace cgx::ecs
     {
         const char* typeName = typeid(T).name();
 
-        PHX_ASSERT(m_systems.find(typeName) != m_systems.end(), "System used before being registered.")
+        CGX_ASSERT(m_systems.find(typeName) != m_systems.end(), "System used before being registered.")
 
         m_signatures.insert({typeName, signature});
     }

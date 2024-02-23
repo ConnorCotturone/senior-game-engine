@@ -17,7 +17,7 @@ namespace cgx::graphics
 
     void Mesh::Initialize()
     {
-        /* setup mesh vertex array object (VAO) */
+        // setup mesh vertex array object (VAO) 
 
         glGenVertexArrays(1, &VAO);     
         glGenBuffers(1, &VBO);          

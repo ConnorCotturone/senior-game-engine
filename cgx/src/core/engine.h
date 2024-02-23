@@ -16,14 +16,19 @@
 #include "../render/mesh.h"
 #include "../render/model.h"
 #include "../render/shader.h"
+#include "../render/resource_manager.h"
 #include "../utility/logging.h"
 
 #include "../components/transform_component.h"
 #include "../components/render_component.h"
 
+#include <filesystem>
+
 struct EngineSettings {
     int WindowWidth = 800;
     int WindowHeight = 600;
+    std::filesystem::path shader_dir = SHADER_DIRECTORY;
+    std::filesystem::path asset_dir = DATA_DIRECTORY;
     // shader source / compile directory paths?
 };
 
@@ -52,20 +57,22 @@ protected:
     virtual void Shutdown();
 
 protected:
-    EngineSettings settings;
+    EngineSettings m_settings;
     TimeData m_timeData;
 
     Window* m_windowHandler;
 
-    ECS::ECSManager* m_ecsHandler;
-    EventHandler* m_eventHandler;
-
     InputHandler* m_inputHandler; 
-    Camera* m_camera;
-
     ImguiHandler* m_imguiHandler;
+
+    cgx::ecs::ECSManager* m_ecsHandler;
+    cgx::event::EventHandler* m_eventHandler;
+    cgx::graphics::Camera* m_camera;
     
-    std::vector<ECS::Entity> m_entities;
+    std::vector<cgx::ecs::Entity> m_entities;
+
+    cgx::graphics::ResourceManager* m_resource_manager;
+
     bool m_isRunning;
     bool m_imguiActive;
 };

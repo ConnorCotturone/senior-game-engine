@@ -8,6 +8,7 @@
 
 #include "mesh.h"
 #include "shader.h"
+#include "model.h"
 
 #include <memory>
 #include <string>
