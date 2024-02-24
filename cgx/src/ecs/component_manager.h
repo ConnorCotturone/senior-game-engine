@@ -78,8 +78,7 @@ namespace cgx::ecs
 
     };
 
-
 }
 
 
-#endif // COMPONENTMANGER_H
+#endif // COMPONENTMANAGER_H

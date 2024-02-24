@@ -222,7 +222,7 @@ namespace cgx::graphics
             meshes.push_back(mesh);
         }
 
-        std::shared_ptr<Model> model = std::make_shared<Model>(meshes);
+        std::shared_ptr<Model> model = std::make_shared<Model>(path, meshes);
         m_models[path] = model;
         return model;
     }

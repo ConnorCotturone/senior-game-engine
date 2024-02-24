@@ -15,6 +15,9 @@ public:
 
     bool IsKeyPressed(int key) const;
     void getMouseOffset(double& xoffset, double& yoffset);
+    void resetMouseOffset();
+
+    bool ignoreNextMouseUpdate;
 
 private:
     GLFWwindow* m_window;

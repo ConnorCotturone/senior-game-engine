@@ -19,12 +19,14 @@ namespace cgx::graphics
     public:
         unsigned int ID;        // shader program reference ID
 
-        Shader(const std::string& shader_dir_path, const std::string& vert_filename, const std::string& frag_filename);       // constructor
+        Shader(std::string name, const std::string& shader_dir_path, const std::string& vert_filename, const std::string& frag_filename);       // constructor
         ~Shader();                                                      // destructor
 
+        const std::string& GetName() { return m_name; }
         void use(); 
 
     private:
+        std::string m_name;
         void checkCompileErrors(unsigned int shader, std::string type);
 
     public:

@@ -95,6 +95,12 @@ void Engine::Update() {
 
     if (!m_imguiActive)
     {
+        if (m_inputHandler->ignoreNextMouseUpdate)
+        {
+            m_inputHandler->resetMouseOffset();
+            m_inputHandler->ignoreNextMouseUpdate = false;
+        }
+
         glfwSetInputMode(m_windowHandler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         double xoffset, yoffset;
         m_inputHandler->getMouseOffset(xoffset, yoffset);
@@ -112,6 +118,7 @@ void Engine::Update() {
     }
     else
     {
+        m_inputHandler->ignoreNextMouseUpdate = true;
         glfwSetInputMode(m_windowHandler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         m_camera->MouseUpdate((double)0.0, (double)0.0, true);
     }

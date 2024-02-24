@@ -15,8 +15,9 @@
 namespace cgx::graphics
 {
 
-    Model::Model(std::vector<std::shared_ptr<Mesh>> meshes)
-        : m_meshes(meshes) {}
+    Model::Model(std::string name, std::vector<std::shared_ptr<Mesh>> meshes)
+        : m_name(name)
+        , m_meshes(meshes) {}
 
     void Model::draw(Shader& shader)
     {

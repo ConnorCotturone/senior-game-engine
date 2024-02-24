@@ -18,7 +18,8 @@ namespace cgx::ecs
 
     Entity EntityManager::CreateEntity()    // fetch first unused entity from entity vector
     {
-        CGX_ASSERT(m_activeEntityCount < MAX_ENTITIES, "Too many active entities.")
+        CGX_ASSERT(m_activeEntityCount < MAX_ENTITIES, "Too many active entities."); 
+        if (!(m_activeEntityCount < MAX_ENTITIES)) { CGX_INFO("Active Entity Count {}", m_activeEntityCount); } 
 
         Entity id = m_availableEntities.front();        // fetch 
         m_availableEntities.pop();

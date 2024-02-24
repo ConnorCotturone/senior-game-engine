@@ -14,7 +14,12 @@ using fs_path = std::filesystem::path;
 namespace cgx::graphics
 {
 
-    Shader::Shader(const std::string& shader_dir_path, const std::string& vert_filename, const std::string& frag_filename)
+    Shader::Shader(
+        std::string name, 
+        const std::string& shader_dir_path, 
+        const std::string& vert_filename, 
+        const std::string& frag_filename ) 
+        : m_name(name)
     {
         fs_path vert_path = fs_path(shader_dir_path) / vert_filename;
         fs_path frag_path = fs_path(shader_dir_path) / frag_filename;

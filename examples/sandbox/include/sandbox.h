@@ -19,10 +19,23 @@ protected:
     void Initialize() override;
     void Update() override;
     void Render() override;
-    void ImguiRender();
     void Shutdown() override;
 
+    void ImguiRender();
+    void EditTransformComponent(int entity_index);
+    void EditRenderComponent(int entity_index);
+
+
     std::string message;
+
+private:
+    std::vector<std::string> model_filenames;
+    std::unordered_map<std::string, std::shared_ptr<cgx::graphics::Model>> loaded_models;
+
+    std::vector<std::string> shader_names;
+    std::unordered_map<std::string, std::shared_ptr<cgx::graphics::Shader>> loaded_shaders;
+    
+    int selected_entity_index = -1;
 
 };
 
