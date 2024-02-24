@@ -13,7 +13,7 @@ void Sandbox::Initialize()
 {
     Engine::Initialize();
 
-    model_filenames = {"soccerball/ball.obj", "objects/light_cube/light_cube.obj"};
+    model_filenames = {"soccerball/ball.obj", "objects/light_cube/light_cube.obj", "sponza/sponza.obj"};
     shader_names = {"model", "lighting"};
 
     for (const auto& filename : model_filenames)
