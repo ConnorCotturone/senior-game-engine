@@ -38,8 +38,8 @@ namespace cgx::graphics
         glm::vec3 getPosition() { return Position; }
         glm::vec3 getFront() { return Front; }
 
-        void KeyboardUpdate(Camera_Movement direction, float timestep);
-        void MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch); 
+        void KeyboardUpdate(Camera_Movement direction, double timestep);
+        void MouseUpdate(double xoffset, double yoffset, GLboolean constrainPitch); 
 
 
     private:

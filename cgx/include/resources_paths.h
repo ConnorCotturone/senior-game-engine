@@ -1,2 +1,2 @@
-#define DATA_DIRECTORY "/Users/curlin/dev/cgx/build/cgx/data"
-#define SHADER_DIRECTORY "/Users/curlin/dev/cgx/build/cgx/shaders"
+#define DATA_DIRECTORY "C:/Users/curlin/dev/cgx/out/build/x64-Debug/cgx/data"
+#define SHADER_DIRECTORY "C:/Users/curlin/dev/cgx/out/build/x64-Debug/cgx/shaders"

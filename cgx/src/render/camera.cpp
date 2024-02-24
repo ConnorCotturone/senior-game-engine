@@ -25,9 +25,9 @@ namespace cgx::graphics
         return glm::lookAt(Position, Position + Front, Up);
     }
 
-    void Camera::KeyboardUpdate(Camera_Movement direction, float deltaTime)
+    void Camera::KeyboardUpdate(Camera_Movement direction, double deltaTime)
     {
-        float velocity = MovementSpeed * deltaTime;
+        float velocity = MovementSpeed * static_cast<float>(deltaTime);
         if (direction == FORWARD)
             Position += Front * velocity;
         if (direction == BACKWARD)
@@ -38,13 +38,10 @@ namespace cgx::graphics
             Position += Right * velocity;
     }
 
-    void Camera::MouseUpdate(float xoffset, float yoffset, GLboolean constrainPitch = true)
+    void Camera::MouseUpdate(double xoffset, double yoffset, GLboolean constrainPitch = true)
     {
-        xoffset *= MouseSensitivity;
-        yoffset *= MouseSensitivity;
-
-        Yaw     += xoffset;
-        Pitch   += yoffset;
+        Yaw     += static_cast<float>(xoffset * MouseSensitivity);
+        Pitch   += static_cast<float>(yoffset * MouseSensitivity);
 
         if (constrainPitch)
         {

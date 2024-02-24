@@ -12,6 +12,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tinyobjloader/tiny_obj_loader.h"
 
+#include <filesystem>
 #include <sstream>
 #include <iomanip>
 
@@ -84,8 +85,8 @@ namespace cgx::graphics
     // https://github.com/chrisliebert/sdlgl3-wavefront/blob/master/src/Renderer.cpp
     std::shared_ptr<Model> ResourceManager::loadModel(const std::string& path)
     {
-        std::__fs::filesystem::path obj_file_path = path;
-        std::__fs::filesystem::path mat_dir_path = obj_file_path.parent_path();
+        std::filesystem::path obj_file_path = path;
+        std::filesystem::path mat_dir_path = obj_file_path.parent_path();
 
 
         tinyobj::ObjReaderConfig reader_config;
@@ -139,10 +140,10 @@ namespace cgx::graphics
                 diffuse_color,
                 specular_color,
                 shininess,
-                loadTexture(ambient_tex_path),
-                loadTexture(diffuse_tex_path),
-                loadTexture(specular_tex_path),
-                loadTexture(normal_tex_path)
+                loadTexture(ambient_tex_path.string()),
+                loadTexture(diffuse_tex_path.string()),
+                loadTexture(specular_tex_path.string()),
+                loadTexture(normal_tex_path.string())
             );
 
             m_materials[id] = std::make_shared<Material>(material);

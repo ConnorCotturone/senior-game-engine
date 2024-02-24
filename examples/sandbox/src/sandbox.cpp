@@ -27,7 +27,7 @@ void Sandbox::Initialize()
         std::filesystem::path vert_path = (m_settings.shader_dir / (name + ".vs")).string();
         std::filesystem::path frag_path = (m_settings.shader_dir / (name + ".fs")).string();
 
-        loaded_shaders[name] = std::make_shared<cgx::graphics::Shader>(name, m_settings.shader_dir, vert_path, frag_path);
+        loaded_shaders[name] = std::make_shared<cgx::graphics::Shader>(name, m_settings.shader_dir.string(), vert_path.string(), frag_path.string());
     }
 
     m_entities = std::vector<cgx::ecs::Entity>();

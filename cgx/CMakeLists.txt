@@ -1,7 +1,8 @@
-find_package(GLFW3 REQUIRED)
+# find_package(GLFW3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_subdirectory(external/assimp)
+add_subdirectory(external/glfw)
+# add_subdirectory(external/assimp)
 add_subdirectory(external/spdlog)
 
 # IMGUI Static Library Creation 
@@ -101,6 +102,8 @@ target_include_directories(cgx
     # cgx public header
     PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    
+    SYSTEM PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/external
 
     PRIVATE
