@@ -2,7 +2,6 @@
 find_package(OpenGL REQUIRED)
 
 add_subdirectory(external/glfw)
-# add_subdirectory(external/assimp)
 add_subdirectory(external/spdlog)
 
 # IMGUI Static Library Creation 

@@ -1,7 +1,6 @@
 // Copyright © 2024 Jacob Curlin
 
 #include "imgui_manager.h"
-#include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>

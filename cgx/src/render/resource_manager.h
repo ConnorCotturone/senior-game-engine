@@ -9,6 +9,7 @@
 #include "mesh.h"
 #include "texture.h"
 #include "model.h"
+#include "shader.h"
 
 
 #include <string>
@@ -28,7 +29,10 @@ namespace cgx::graphics
         std::shared_ptr<Material> getMaterial(const std::string& materialID);
         std::shared_ptr<Texture> getTexture(const std::string& textureID);
 
+        const std::unordered_map<std::string, std::shared_ptr<Model>>& GetModels() const { return m_models; }
+        const std::unordered_map<std::string, std::shared_ptr<Shader>>& GetShaders() const { return m_shaders; }
 
+        std::shared_ptr<Shader> loadShader(const std::string& name, const std::string& shader_dir);
         std::shared_ptr<Model> loadModel(const std::string& path);
         std::shared_ptr<Texture> loadTexture(const std::string& path);
 
@@ -37,6 +41,8 @@ namespace cgx::graphics
         std::unordered_map<std::string, std::shared_ptr<Mesh>> m_meshes;
         std::unordered_map<std::string, std::shared_ptr<Model>> m_models;
         std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
+
+        std::unordered_map<std::string, std::shared_ptr<Shader>> m_shaders;
     };
 }
 

@@ -24,6 +24,7 @@
 #include "../components/render_component.h"
 #include "../components/light_component.h"
 
+#include <glm/gtc/type_ptr.hpp>
 #include <filesystem>
 
 struct EngineSettings {
@@ -56,16 +57,17 @@ protected:
     EngineSettings m_settings;
     TimeData m_time_data;
 
-    std::unique_ptr<cgx::graphics::ResourceManager> m_resource_manager;
-    std::shared_ptr<cgx::ecs::ECSManager>           m_ecs_handler;
+    // unique 
     std::unique_ptr<Window>                         m_window_handler;
     std::unique_ptr<cgx::event::EventHandler>       m_event_handler;
     std::unique_ptr<InputHandler>                   m_input_handler;
     std::unique_ptr<cgx::gui::ImguiManager>         m_imgui_manager;
-    std::shared_ptr<cgx::gui::ImguiECSSystem>       m_imgui_ecs_system;
     std::unique_ptr<cgx::graphics::Camera>          m_camera;
-   
-    std::vector<cgx::ecs::Entity> m_entities;
+
+    // shared 
+    std::shared_ptr<cgx::ecs::ECSManager>           m_ecs_manager;
+    std::shared_ptr<cgx::gui::ImguiECSSystem>       m_imgui_ecs_system;
+    std::shared_ptr<cgx::graphics::ResourceManager> m_resource_manager;
 
     bool m_is_running;
     bool m_imgui_active;

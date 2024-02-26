@@ -79,6 +79,16 @@ namespace cgx::graphics
         }
     }
 
+    std::shared_ptr<Shader> ResourceManager::loadShader(const std::string& name, const std::string& shader_dir)
+    {
+        std::string vert_path = (std::filesystem::path(shader_dir) / (name + ".vs")).string();
+        std::string frag_path = (std::filesystem::path(shader_dir) / (name + ".fs")).string();
+
+        m_shaders[name] = std::make_shared<cgx::graphics::Shader>(name, shader_dir, vert_path, frag_path);
+        return m_shaders[name];
+    }
+
+
     // sources: 
     // https://github.com/chrisliebert/sdlgl3-wavefront/blob/master/src/Renderer.cpp
     std::shared_ptr<Model> ResourceManager::loadModel(const std::string& path)

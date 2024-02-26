@@ -4,8 +4,8 @@
 #define IMGUISYSTEM_H
 
 #include "../ecs/ecs_manager.h"
-#include "imgui_ecs_system.h"
 #include"../components/transform_component.h"
+//#include "imgui_ecs_system.h"
 
 #include <GLFW/glfw3.h>
 #include <vector>

@@ -60,19 +60,19 @@ void Engine::Initialize() {
 
     m_resource_manager = std::make_unique<cgx::graphics::ResourceManager>();
 
-    m_ecs_handler = std::make_shared<cgx::ecs::ECSManager>();
-    m_ecs_handler->Initialize();
-    m_ecs_handler->RegisterComponent<TransformComponent>();
-    m_ecs_handler->RegisterComponent<RenderComponent>();
-    m_ecs_handler->RegisterComponent<LightComponent>();
+    m_ecs_manager = std::make_shared<cgx::ecs::ECSManager>();
+    m_ecs_manager->Initialize();
+    m_ecs_manager->RegisterComponent<TransformComponent>();
+    m_ecs_manager->RegisterComponent<RenderComponent>();
+    m_ecs_manager->RegisterComponent<LightComponent>();
 
     m_imgui_manager = std::make_unique<cgx::gui::ImguiManager>();
     m_imgui_manager->Initialize(m_window_handler->GetGLFWWindow());
 
-    m_imgui_ecs_system = m_ecs_handler->RegisterSystem<cgx::gui::ImguiECSSystem>();
-    m_imgui_ecs_system->Initialize(m_ecs_handler);
+    m_imgui_ecs_system = m_ecs_manager->RegisterSystem<cgx::gui::ImguiECSSystem>();
+    m_imgui_ecs_system->Initialize(m_ecs_manager, m_resource_manager);
     cgx::ecs::Signature imgui_ecs_system_signature;
-    m_ecs_handler->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
+    m_ecs_manager->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
 
 
     m_camera = std::make_unique<cgx::graphics::Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -122,6 +122,58 @@ void Engine::Render()
 {
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // model, view, projection matrices
+    glm::mat4 model_mat(1.0f);
+    glm::mat4 view_mat = m_camera->GetViewMatrix();
+    glm::mat4 proj_mat = glm::perspective(
+        glm::radians(m_camera->getZoom()),
+        (float) m_settings.window_width / (float) m_settings.window_height,
+        0.1f, 100.0f
+    );
+
+    // iterate through active entities present in the ecs manager
+    for (auto& entity : m_ecs_manager->GetActiveEntities())
+    {
+        // skip rendering of entity if it has no RenderComponent
+        if (!m_ecs_manager->HasComponent<RenderComponent>(entity)) { continue; }
+
+        std::shared_ptr<cgx::graphics::Model> model = m_ecs_manager->GetComponent<RenderComponent>(entity).model;
+        std::shared_ptr<cgx::graphics::Shader> shader = m_ecs_manager->GetComponent<RenderComponent>(entity).shader;
+
+        // skip rendering of entity if either RenderComponent.model or RenderComponent.shader uninitialized
+        if (!(model && shader)) { continue; }   
+
+        // if entity has a TransformComponent, apply transformations to model matrix 
+        if (m_ecs_manager->HasComponent<TransformComponent>(entity))
+        {
+            TransformComponent& transform = m_ecs_manager->GetComponent<TransformComponent>(entity);
+
+            // apply rotations transformations around each axis
+            model_mat = glm::rotate(model_mat, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); // X-axis
+            model_mat = glm::rotate(model_mat, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)); // Y-axis
+            model_mat = glm::rotate(model_mat, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)); // Z-axis
+
+            model_mat = glm::translate(model_mat, transform.position);  // apply position transformation
+
+            model_mat = glm::scale(model_mat, transform.scale); // apply scale transformation
+        }
+
+        // activate shader program, set shader data, draw
+        shader->use();
+
+        // shader->setVec3("light.position", (m_ecsHandler->GetComponent<TransformComponent>(light))) /TODO
+        shader->setVec3("light.position", 1.0f, 1.0f, 1.0f);
+        shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+        shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+        shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        shader->setMat4("projection", proj_mat);
+        shader->setMat4("view", view_mat);
+        shader->setMat4("model", model_mat);
+
+        model->draw(*shader);
+    }
 }
 
 void Engine::Shutdown() {}
