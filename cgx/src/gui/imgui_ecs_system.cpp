@@ -244,8 +244,8 @@ namespace cgx::gui
                 m_ecs_manager->AddComponent(
                     entity,
                     LightComponent {
-                        .color = glm::vec3(0.0f, 0.0f, 0.0f),
                         .position = glm::vec3(0.0f, 0.0f, 0.0f),
+                        .color = glm::vec3(0.0f, 0.0f, 0.0f),
                         .intensity = 1.0f
                 });
                 has_light_component = true;
