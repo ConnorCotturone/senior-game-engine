@@ -1,7 +1,4 @@
-// jacob curlin
-// entity_manager.h
-// 01/28/2023
-
+// Copyright © 2024 Jacob Curlin
 
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
@@ -21,14 +18,17 @@ namespace cgx::ecs
 
         Entity CreateEntity();
         void DestroyEntity(Entity entity);
+
         void SetSignature(Entity entity, Signature signature);
         Signature GetSignature(Entity entity);
 
+        std::vector<Entity> GetActiveEntities() const;
+
     private:
-        std::queue<Entity> m_availableEntities{};
+        std::queue<Entity> m_available_entities{};
         std::array<Signature, MAX_ENTITIES> m_signatures{};
 
-        uint32_t m_activeEntityCount;
+        uint32_t m_active_entity_count;
     };
 }
 

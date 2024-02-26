@@ -1,34 +1,10 @@
-// jacob curlin
-// SystemManager.cpp
-// 01/28/2024
-
+// Copyright © 2024 Jacob Curlin
+ 
 #include "system_manager.h"
 #include "../utility/logging.h"
 
 namespace cgx::ecs
 {
-    template<typename T>
-    std::shared_ptr<T> SystemManager::RegisterSystem()
-    {
-        const char* typeName = typeid(T).name();
-
-        CGX_ASSERT(m_systems.find(typeName) == m_systems.end(), "Registering system more than once.");
-
-        auto system = std::make_shared<T>();
-        m_systems.insert({typeName, system});
-        return system;
-    }
-
-    template<typename T>
-    void SystemManager::SetSignature(Signature signature)
-    {
-        const char* typeName = typeid(T).name();
-
-        CGX_ASSERT(m_systems.find(typeName) != m_systems.end(), "System used before being registered.")
-
-        m_signatures.insert({typeName, signature});
-    }
-
     void SystemManager::EntityDestroyed(Entity entity)
     {
         for (auto const& pair : m_systems)
@@ -45,9 +21,9 @@ namespace cgx::ecs
         {
             auto const& type = pair.first;
             auto const& system = pair.second;
-            auto const& systemSignature = m_signatures[type];
+            auto const& system_signature = m_signatures[type];
 
-            if ((entitySignature & systemSignature) == systemSignature)
+            if ((entitySignature & system_signature) == system_signature)
             {
                 system->m_entities.insert(entity);
             }

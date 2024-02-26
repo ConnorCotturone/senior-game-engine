@@ -4,6 +4,12 @@
 
 #include "material.h"
 
+
+#define AMBIENT_MAP_BIT 1
+#define DIFFUSE_MAP_BIT 2
+#define SPECULAR_MAP_BIT 4
+#define NORMAL_MAP_BIT 8
+
 namespace cgx::graphics
 {
 
@@ -33,21 +39,32 @@ namespace cgx::graphics
     void Material::bind(Shader &shader) 
     {
         // TODO!
+        shader.use();
+        shader.setVec3("material.ambient_color", m_ambient_color);
+        shader.setVec3("material.diffuse_color", m_diffuse_color);     
+        shader.setVec3("material.specular_color", m_specular_color);
+        shader.setFloat("material.shininess", m_shininess);
 
-        shader.setVec3("material.diffuseColor", m_diffuse_color);     
-        shader.setVec3("material.specularColor", m_specular_color);
-        shader.setFloat("material.shininess", 64.0f);
-
+        int map_bitset = 0;
+        if (m_ambient_map != nullptr)
+        {
+            m_ambient_map->Bind(0);
+            shader.setInt("material.ambient_map", 0);
+            map_bitset |= AMBIENT_MAP_BIT;
+        }
         if (m_diffuse_map != nullptr)   
         { 
-            m_diffuse_map->Bind(0); 
-            shader.setInt("material.diffuseMap", 0);
+            m_diffuse_map->Bind(1); 
+            shader.setInt("material.diffuse_map", 1);
+            map_bitset |= DIFFUSE_MAP_BIT;
         }
         if (m_specular_map != nullptr)  
         { 
-            m_specular_map->Bind(1); 
-            shader.setInt("material.specularMap", 1);
+            m_specular_map->Bind(2); 
+            shader.setInt("material.specular_map", 2);
+            map_bitset |= SPECULAR_MAP_BIT;
         }
+        shader.setInt("material.map_bitset", map_bitset);
         
         glActiveTexture(GL_TEXTURE0);
     } 

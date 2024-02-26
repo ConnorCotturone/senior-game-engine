@@ -34,12 +34,10 @@ target_sources(cgx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/engine.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/input_handler.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/window.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/imgui_handler.h 
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/engine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/input_handler.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/window.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/imgui_handler.cpp 
 
     # ECS
     PRIVATE
@@ -80,17 +78,26 @@ target_sources(cgx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/shader.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/texture.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/resource_manager.cpp
+    
+    # Components
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/transform_component.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/render_component.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/light_component.h
+
+    # Gui
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_manager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_ecs_system.h
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_manager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_ecs_system.cpp
 
     # Utility
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/utility/logging.h
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/utility/logging.cpp
-
-    # Components
-    PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/transform_component.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/render_component.h
 
     # glad
     PRIVATE

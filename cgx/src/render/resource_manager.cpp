@@ -2,7 +2,6 @@
 // resource_manager.cpp
 // 02/09/2024
 
-
 #include "resource_manager.h"
 #include "../utility/logging.h"
 
@@ -19,7 +18,6 @@
 
 namespace cgx::graphics 
 {
-
     ResourceManager::ResourceManager() {}
     ResourceManager::~ResourceManager() {}
 
@@ -129,7 +127,7 @@ namespace cgx::graphics
             diffuse_color = glm::vec3(src_mat.diffuse[0], src_mat.diffuse[1], src_mat.diffuse[2]);
             specular_color = glm::vec3(src_mat.specular[0], src_mat.specular[1], src_mat.specular[2]);
 
-            if (!src_mat.ambient_texname.empty()) { ambient_tex_path = mat_dir_path / src_mat.ambient_texname; }
+            if (!src_mat.ambient_texname.empty()) { ambient_tex_path = mat_dir_path / src_mat.ambient_texname; } 
             if (!src_mat.diffuse_texname.empty()) { diffuse_tex_path = mat_dir_path / src_mat.diffuse_texname; }
             if (!src_mat.specular_texname.empty()) { specular_tex_path = mat_dir_path / src_mat.specular_texname; } 
             if (!src_mat.bump_texname.empty()) { normal_tex_path = mat_dir_path / src_mat.normal_texname; }
@@ -140,10 +138,10 @@ namespace cgx::graphics
                 diffuse_color,
                 specular_color,
                 shininess,
-                loadTexture(ambient_tex_path.string()),
-                loadTexture(diffuse_tex_path.string()),
-                loadTexture(specular_tex_path.string()),
-                loadTexture(normal_tex_path.string())
+                !ambient_tex_path.empty() ? loadTexture(ambient_tex_path.string()) : nullptr,
+                !diffuse_tex_path.empty() ? loadTexture(diffuse_tex_path.string()) : nullptr,
+                !specular_tex_path.empty() ? loadTexture(specular_tex_path.string()) : nullptr,
+                !normal_tex_path.empty() ? loadTexture(normal_tex_path.string()) : nullptr
             );
 
             m_materials[id] = std::make_shared<Material>(material);
@@ -247,7 +245,7 @@ namespace cgx::graphics
 
             if (format == 0) { CGX_ERROR("Failed to determine valid texture data format"); } 
         }
-        else { CGX_ERROR("Failed to load texture data."); }
+        else { CGX_ERROR("Failed to load texture data. ({})", path); }
 
         std::ostringstream idStream;
         idStream << path << "_" << std::setfill('0') << std::setw(3) << m_textures.size();

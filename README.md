@@ -1,8 +1,6 @@
 ## cgx : curlin graphics engine
 
-an excercise in patience
+Makes the display do stuff. 
 
 
-### notes
- 
-- current ECS source : https://austinmorlan.com/posts/entity_component_system/
+

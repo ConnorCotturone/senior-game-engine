@@ -1,6 +1,4 @@
-// entity_manager.cpp
-// jacob curlin
-// 01/26/2023
+// Copyright © 2024 Jacob Curlin
 
 #include "entity_manager.h"
 #include "../utility/logging.h"
@@ -8,23 +6,23 @@
 namespace cgx::ecs
 {
 
-    EntityManager::EntityManager() : m_activeEntityCount(0)  // initialize vector of MAX_ENTITIES   
+    EntityManager::EntityManager() : m_active_entity_count(0)  // initialize vector of MAX_ENTITIES   
     {
         for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
         {
-            m_availableEntities.push(entity);
+            m_available_entities.push(entity);
         }
     }
 
     Entity EntityManager::CreateEntity()    // fetch first unused entity from entity vector
     {
-        CGX_ASSERT(m_activeEntityCount < MAX_ENTITIES, "Too many active entities."); 
-        if (!(m_activeEntityCount < MAX_ENTITIES)) { CGX_INFO("Active Entity Count : {}", m_activeEntityCount); } 
-        if (!(m_activeEntityCount < MAX_ENTITIES)) { CGX_INFO("MAX_ENTITIES : {}", MAX_ENTITIES); }
+        CGX_ASSERT(m_active_entity_count < MAX_ENTITIES, "Too many active entities."); 
+        if (!(m_active_entity_count < MAX_ENTITIES)) { CGX_INFO("Active Entity Count : {}", m_active_entity_count); } 
+        if (!(m_active_entity_count < MAX_ENTITIES)) { CGX_INFO("MAX_ENTITIES : {}", MAX_ENTITIES); }
 
-        Entity id = m_availableEntities.front();        // fetch 
-        m_availableEntities.pop();
-        ++m_activeEntityCount;
+        Entity id = m_available_entities.front();        // fetch 
+        m_available_entities.pop();
+        ++m_active_entity_count;
 
         return id;
     }
@@ -36,8 +34,8 @@ namespace cgx::ecs
 
         m_signatures[entity].reset();   // reset entity's signature (bitset) 
 
-        m_availableEntities.push(entity);
-        --m_activeEntityCount;
+        m_available_entities.push(entity);
+        --m_active_entity_count;
     }
 
     void EntityManager::SetSignature(Entity entity, Signature signature)
@@ -54,4 +52,16 @@ namespace cgx::ecs
         return m_signatures[entity];
     }
 
+    std::vector<Entity> EntityManager::GetActiveEntities() const
+    {
+        std::vector<Entity> active_entities;
+        for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
+        {
+            if (m_signatures[entity].any())
+            {
+                active_entities.push_back(entity);
+            }
+        }
+        return active_entities;
+    }
 }

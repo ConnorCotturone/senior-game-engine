@@ -1,7 +1,4 @@
-// ecs_types.h
-// jacob curlin
-// 01/30/2024
-
+// Copyright © 2024 Jacob Curlin
 
 #ifndef ECSTYPES_H
 #define ECSTYPES_H

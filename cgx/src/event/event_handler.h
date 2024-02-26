@@ -1,7 +1,4 @@
-// jacob curlin
-// event_handler.h
-// 01/25/2023
-
+// Copyright © 2024 Jacob Curlin
 
 #ifndef EVENTHANDLER_H
 #define EVENTHANDLER_H
@@ -29,8 +26,8 @@ namespace cgx::event
 
     private:
         GLFWwindow* m_window;
-        static std::vector<KeyCallback> m_keyCallbacks;
-        static std::vector<MouseCallback> m_mouseCallbacks;
+        static std::vector<KeyCallback> m_key_callbacks;
+        static std::vector<MouseCallback> m_mouse_callbacks;
 
         static void GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void GLFWMouseCallback(GLFWwindow* window, double xpos, double ypos);

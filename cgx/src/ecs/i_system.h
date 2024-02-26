@@ -1,6 +1,4 @@
-// jacob curlin
-// ISystem.h
-// 01/28/2024
+// Copyright © 2024 Jacob Curlin
 
 #ifndef ISYSTEM_H
 #define ISYSTEM_H

@@ -36,13 +36,11 @@ void Window::Initialize(int width, int height, const char* title)
 
     glfwMakeContextCurrent(m_window);
     glfwSetFramebufferSizeCallback(m_window, FramebufferSizeCallback);
-
 }
 
 void Window::Update() { 
     glfwPollEvents();
 }
-
 
 bool Window::ShouldClose() const {
     return glfwWindowShouldClose(m_window);

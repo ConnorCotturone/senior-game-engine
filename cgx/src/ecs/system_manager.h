@@ -1,12 +1,11 @@
-// jacob curlin
-// SystemManager.h
-// 01/28/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef SYSTEMMANAGER_H
 #define SYSTEMMANAGER_H
 
 #include "ecs_types.h"
 #include "i_system.h"
+#include "../utility/logging.h"
 #include <memory>
 #include <unordered_map>
 
@@ -18,10 +17,26 @@ namespace cgx::ecs
     {
     public:
         template<typename T>
-        std::shared_ptr<T> RegisterSystem();
+        std::shared_ptr<T> RegisterSystem()
+        {
+            const char* type_name = typeid(T).name();
+
+            CGX_ASSERT(m_systems.find(type_name) == m_systems.end(), "Registering system more than once.");
+
+            auto system = std::make_shared<T>();
+            m_systems.insert({type_name, system});
+            return system;
+        }
 
         template<typename T>
-        void SetSignature(Signature signature);
+        void SetSignature(Signature signature)
+        {
+            const char* type_name = typeid(T).name();
+
+            CGX_ASSERT(m_systems.find(type_name) != m_systems.end(), "System used before being registered.");
+
+            m_signatures.insert({type_name, signature});
+        }
 
         void EntityDestroyed(Entity entity);
 
@@ -33,9 +48,6 @@ namespace cgx::ecs
     };
 
 }
-
-
-
 
 
 #endif // SYSTEM_H
