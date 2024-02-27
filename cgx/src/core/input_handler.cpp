@@ -1,6 +1,4 @@
-// jacob curlin
-// input_handler.cpp
-// 01/05/2023
+// Copyright © 2024 Jacob Curlin
 
 #include "input_handler.h"
 

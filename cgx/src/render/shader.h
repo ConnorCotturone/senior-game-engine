@@ -1,6 +1,4 @@
-// jacob curlin
-// shader.h
-// 01/05/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef SHADER_H
 #define SHADER_H

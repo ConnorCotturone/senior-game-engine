@@ -1,6 +1,4 @@
-// jacob curlin
-// resource_manager.cpp
-// 02/09/2024
+// Copyright © 2024 Jacob Curlin
 
 #include "resource_manager.h"
 #include "../utility/logging.h"

@@ -1,6 +1,4 @@
-// jacob curlin
-// material.h
-// 01/16/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef MATERIAL_H
 #define MATERIAL_H

@@ -1,6 +1,4 @@
-// jacob curlin
-// input_handler.h
-// 01/05/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H

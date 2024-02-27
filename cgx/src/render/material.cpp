@@ -1,6 +1,4 @@
-// jacob curlin
-// material.cpp
-// 01/16/2023
+// Copyright © 2024 Jacob Curlin
 
 #include "material.h"
 

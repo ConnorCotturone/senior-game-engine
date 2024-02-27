@@ -1,6 +1,4 @@
-// jacob curlin
-// Transform.h
-// 01/28/2024
+// Copyright © 2024 Jacob Curlin
 
 #ifndef TRANSFORM_H
 #define TRANSFORM_H

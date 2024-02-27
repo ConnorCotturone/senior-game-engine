@@ -1,6 +1,4 @@
-// jacob curlin
-// engine.cpp
-// 01/05/2023
+// Copyright © 2024 Jacob Curlin
 
 #define STB_IMAGE_IMPLEMENTATION
 

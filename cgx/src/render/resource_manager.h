@@ -1,6 +1,4 @@
-// jacob curlin
-// resource_manager.h
-// 02/09/2024
+// Copyright © 2024 Jacob Curlin
 
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
@@ -10,7 +8,6 @@
 #include "texture.h"
 #include "model.h"
 #include "shader.h"
-
 
 #include <string>
 #include <memory>
@@ -45,7 +42,5 @@ namespace cgx::graphics
         std::unordered_map<std::string, std::shared_ptr<Shader>> m_shaders;
     };
 }
-
-
 
 #endif // RESOURCEMANAGER_H

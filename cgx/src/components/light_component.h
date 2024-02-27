@@ -1,6 +1,4 @@
-// jacob curlin
-// light_component.h
-// 02/25/2024
+// Copyright © 2024 Jacob Curlin
 
 #ifndef LIGHTCOMPONENT_H
 #define LIGHTCOMPONENT_H
@@ -13,7 +11,5 @@ struct LightComponent
     glm::vec3 color;
     float intensity;
 };
-
-
 
 #endif // LIGHTCOMPONENT_H

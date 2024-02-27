@@ -1,6 +1,4 @@
-// jacob curlin
-// texture.cpp
-// 02/02/2024
+// Copyright © 2024 Jacob Curlin
 
 #include "texture.h"
 #include "../utility/logging.h"

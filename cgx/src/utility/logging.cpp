@@ -1,6 +1,4 @@
-// jacob curlin
-// logging.cpp
-// 01/16/2023
+// Copyright © 2024 Jacob Curlin
 
 #include "logging.h"
 

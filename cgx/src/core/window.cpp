@@ -1,16 +1,9 @@
-// jacob curlin
-// window.cpp
-// 01/05/2023
-
+// Copyright © 2024 Jacob Curlin
 
 #include "window.h"
 #include <iostream>
 
-
-Window::Window()
-{
-    // do nothing
-}
+Window::Window() {}
 
 Window::~Window() 
 {

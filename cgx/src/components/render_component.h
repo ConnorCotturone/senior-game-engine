@@ -1,6 +1,4 @@
-// jacob curlin
-// render_component.h
-// 01/29/2024
+// Copyright © 2024 Jacob Curlin
 
 #ifndef RENDERCOMPONENT_H
 #define RENDERCOMPONENT_H

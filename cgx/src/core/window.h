@@ -1,6 +1,4 @@
-// jacob curlin
-// window.h
-// 01/05/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef WINDOW_H
 #define WINDOW_H

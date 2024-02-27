@@ -1,6 +1,4 @@
-// jacob curlin
-// camera.cpp
-// 01/06/2023
+// Copyright © 2024 Jacob Curlin
 
 #include "camera.h"
 
@@ -53,7 +51,6 @@ namespace cgx::graphics
 
         updateCameraVectors();
     }
-
         
     void Camera::updateCameraVectors()
     {

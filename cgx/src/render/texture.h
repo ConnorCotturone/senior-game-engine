@@ -1,6 +1,4 @@
-// jacob curlin
-// texture.h
-// 02/02/2024
+// Copyright © 2024 Jacob Curlin
 
 // src: https://github.com/progrematic/hippo/blob/master/hippo/include/hippo/graphics/texture.h
 

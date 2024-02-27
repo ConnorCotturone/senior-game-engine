@@ -1,6 +1,4 @@
-// jacob curlin
-// engine.h
-// 01/05/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef ENGINE_H
 #define ENGINE_H

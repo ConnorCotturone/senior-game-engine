@@ -1,7 +1,4 @@
-// jacob curlin
-// model.cpp
-// 02/09/2024
-
+// Copyright © 2024 Jacob Curlin
 
 #include "shader.h"
 #include "mesh.h"

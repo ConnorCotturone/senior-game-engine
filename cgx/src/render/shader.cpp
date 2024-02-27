@@ -1,6 +1,4 @@
-// jacob curlin
-// shader.cpp
-// 01/05/2023
+// Copyright © 2024 Jacob Curlin
 
 #include "shader.h"
 #include <iostream>

@@ -1,7 +1,4 @@
-// jacob curlin
-// model.h
-// 02/08/2024
-
+// Copyright © 2024 Jacob Curlin
 
 #ifndef MODEL_H
 #define MODEL_H

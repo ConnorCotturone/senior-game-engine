@@ -1,6 +1,4 @@
-// jacob curlin
-// mesh.cpp
-// 01/06/2023
+// Copyright © 2024 Jacob Curlin
 
 #include "mesh.h"
 

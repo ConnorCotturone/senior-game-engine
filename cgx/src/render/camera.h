@@ -1,6 +1,4 @@
-// jacob curlin
-// camera.h
-// 01/06/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef CAMERA_H
 #define CAMERA_H

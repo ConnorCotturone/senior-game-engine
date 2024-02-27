@@ -1,3 +1,5 @@
+// Copyright © 2024 Jacob Curlin
+
 #version 330 core
 out vec4 FragColor;
 

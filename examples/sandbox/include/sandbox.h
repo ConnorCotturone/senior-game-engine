@@ -1,6 +1,4 @@
-// jacob curlin
-// sandbox_app.h
-// 12/30/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef SANDBOX_H
 #define SANDBOX_H

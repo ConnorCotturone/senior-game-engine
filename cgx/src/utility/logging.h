@@ -1,6 +1,4 @@
-// jacob curlin
-// logging.h
-// 01/16/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef LOGGING_H
 #define LOGGING_H
@@ -27,9 +25,7 @@ namespace cgx::utility
         static std::shared_ptr<spdlog::logger> s_ClientLogger;
 
     };
-
 }
-
 
 #define CGX_DEFAULT_LOGGER_NAME "core"
 
@@ -43,6 +39,5 @@ namespace cgx::utility
 // x : condition being asserted  |  msg : message to print upon failure of assertion
 //  {} : (do nothing)   |  
 #define CGX_ASSERT(x, msg) if ((x)) {} else {CGX_CRITICAL("ASSERT - {}\n\t{}\n\tin file: {}\n\ton line: {}", #x, msg, __FILE__, __LINE__); }  
-
 
 #endif // LOGGING_H

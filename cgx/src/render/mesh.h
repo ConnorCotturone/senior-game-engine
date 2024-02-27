@@ -1,6 +1,4 @@
-// jacob curlin
-// mesh.h
-// 01/06/2023
+// Copyright © 2024 Jacob Curlin
 
 #ifndef MESH_H
 #define MESH_H

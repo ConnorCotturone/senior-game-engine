@@ -4,7 +4,6 @@
 
 namespace cgx::event
 {
-
     std::vector<EventHandler::KeyCallback> EventHandler::m_key_callbacks;
     std::vector<EventHandler::MouseCallback> EventHandler::m_mouse_callbacks;
 
@@ -51,5 +50,4 @@ namespace cgx::event
             callback(xpos, ypos);
         }
     }
-
 }
