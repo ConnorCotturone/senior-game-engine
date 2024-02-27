@@ -122,7 +122,6 @@ void Engine::Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // model, view, projection matrices
-    glm::mat4 model_mat(1.0f);
     glm::mat4 view_mat = m_camera->GetViewMatrix();
     glm::mat4 proj_mat = glm::perspective(
         glm::radians(m_camera->getZoom()),
@@ -133,6 +132,8 @@ void Engine::Render()
     // iterate through active entities present in the ecs manager
     for (auto& entity : m_ecs_manager->GetActiveEntities())
     {
+        glm::mat4 model_mat(1.0f);
+
         // skip rendering of entity if it has no RenderComponent
         if (!m_ecs_manager->HasComponent<RenderComponent>(entity)) { continue; }
 

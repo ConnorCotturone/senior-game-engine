@@ -27,7 +27,6 @@ namespace cgx::gui
 
         void RenderActiveEntitiesSection();
 
-
         void DisplayRenderComponentEditor(cgx::ecs::Entity entity);
         void DisplayTransformComponentEditor(cgx::ecs::Entity entity);
         void DisplayLightComponentEditor(cgx::ecs::Entity entity);

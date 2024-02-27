@@ -4,6 +4,7 @@
 #include "../components/transform_component.h"
 #include "../components/render_component.h"
 #include "../components/light_component.h"
+#include "../utility/logging.h"
 
 #include <vector>
 #include <memory>
@@ -57,13 +58,14 @@ namespace cgx::gui
 
         ImGui::Text("Count: %zu", m_entities.size());
 
-        if (ImGui::BeginChild("ActiveEntityList", ImVec2(0, 150), true))
+        if (ImGui::BeginChild("ActiveEntityList##ActiveEntityList", ImVec2(0, 150), true))
         {
             for (const auto& entity : m_entities)
             {
                 if (ImGui::Selectable(("Entity_" + std::to_string(entity)).c_str(), entity == m_current_entity))
                 {
                     m_current_entity = entity;
+                    CGX_TRACE("> Selected Entity {}", m_current_entity);
                 }
             }
             ImGui::EndChild();
@@ -73,20 +75,22 @@ namespace cgx::gui
         ImGui::NewLine();
         ImGui::SameLine((ImGui::GetWindowWidth() - 2 * button_width - ImGui::GetStyle().ItemSpacing.x) / 2);
 
-        if (ImGui::Button("Create Entity", ImVec2(button_width, 0)))
+        if (ImGui::Button("Create Entity##ActiveEntityList", ImVec2(button_width, 0)))
         {
             cgx::ecs::Entity new_entity = m_ecs_manager->CreateEntity();
             m_entities.insert(new_entity);
             m_current_entity = new_entity;
+            CGX_INFO("> Created Entity {}", m_current_entity);
         }
 
         ImGui::SameLine();
         
         bool delete_button_active = (m_current_entity == cgx::ecs::MAX_ENTITIES);
         if (delete_button_active) { ImGui::BeginDisabled(); }
-        if (ImGui::Button("Destroy Entity", ImVec2(button_width, 0)))
+        if (ImGui::Button("Destroy Entity##ActiveEntityList", ImVec2(button_width, 0)))
         {
             m_ecs_manager->DestroyEntity(m_current_entity);
+            CGX_TRACE("> Destroyed Entity {}", m_current_entity);
             m_current_entity = cgx::ecs::MAX_ENTITIES;
         }
         if (delete_button_active) { ImGui::EndDisabled(); }
@@ -105,11 +109,14 @@ namespace cgx::gui
         float available_space = ImGui::GetContentRegionAvail().x;
         ImGui::SameLine(available_space - button_width);
 
+        ImGui::PushID(entity);
+
         if (has_render_component)
         {
             if (ImGui::Button("Remove##RemoveRenderComponent"))
             {
                 m_ecs_manager->RemoveComponent<RenderComponent>(entity);
+                CGX_TRACE("Entity {}: Removed RenderComponent", entity);
                 has_render_component = false;
             }
         }
@@ -123,6 +130,7 @@ namespace cgx::gui
                         .model = nullptr,
                         .shader = nullptr
                 });
+                CGX_TRACE("Entity {}: Added RenderComponent", entity)
                 has_render_component = true;
             }
         }
@@ -131,7 +139,11 @@ namespace cgx::gui
         {
             RenderComponent& render_component = m_ecs_manager->GetComponent<RenderComponent>(entity);
 
-            if (ImGui::BeginCombo("Model", render_component.model ? render_component.model->GetName().c_str() : "No Model Selected"))
+            if (ImGui::BeginCombo(
+                "Model##RenderComponentModel", 
+                render_component.model ? 
+                render_component.model->GetName().c_str() : "No Model Selected"
+            ))
             {
                 const std::unordered_map<std::string, std::shared_ptr<cgx::graphics::Model>>& models = m_resource_manager->GetModels();
                 for (const auto& pair : models)
@@ -140,6 +152,7 @@ namespace cgx::gui
                     if (ImGui::Selectable(pair.first.c_str(), is_selected))
                     {
                         render_component.model = pair.second;
+                        CGX_TRACE("Entity {}: RenderComponent Model changed to {}.", entity, pair.first);
                     }
                     if (is_selected)
                     {
@@ -148,7 +161,11 @@ namespace cgx::gui
                 }
                 ImGui::EndCombo();
             }
-            if (ImGui::BeginCombo("Shader", render_component.shader ? render_component.shader->GetName().c_str() : "No Shader Selected"))
+            if (ImGui::BeginCombo(
+                "Shader##RenderComponentShader", 
+                render_component.shader ? 
+                render_component.shader->GetName().c_str() : "No Shader Selected"
+            ))
             {
                 const std::unordered_map<std::string, std::shared_ptr<cgx::graphics::Shader>>& shaders = m_resource_manager->GetShaders();
                 for (const auto& pair : shaders)
@@ -157,6 +174,7 @@ namespace cgx::gui
                     if (ImGui::Selectable(pair.first.c_str(), is_selected))
                     {
                         render_component.shader = pair.second;
+                        CGX_TRACE("Entity {}: RenderComponent Shader changed to {}.", entity, pair.first);
                     }
                     if (is_selected)
                     {
@@ -168,6 +186,8 @@ namespace cgx::gui
         }
 
         ImGui::Separator();
+
+        ImGui::PopID();
     }
 
     void ImguiECSSystem::DisplayTransformComponentEditor(cgx::ecs::Entity entity)
@@ -182,11 +202,14 @@ namespace cgx::gui
         float available_space = ImGui::GetContentRegionAvail().x;
         ImGui::SameLine(available_space - button_width);
 
+        ImGui::PushID(entity);
+
         if (has_transform_component)
         {
             if (ImGui::Button("Remove##RemoveTransformComponent"))
             {
                 m_ecs_manager->RemoveComponent<TransformComponent>(entity);
+                CGX_TRACE("Entity {}: Removed TransformComponent", entity);
                 has_transform_component = false;
             }
         }
@@ -201,6 +224,7 @@ namespace cgx::gui
                         .rotation = glm::vec3(0.0f, 0.0f, 0.0f),
                         .scale = glm::vec3(1.0f, 1.0f, 1.0f)
                     });
+                CGX_TRACE("Entity {}: Added TransformComponent", entity)
                 has_transform_component = true;
             }
         }
@@ -208,12 +232,21 @@ namespace cgx::gui
         if (has_transform_component)
         {
             auto& component = m_ecs_manager->GetComponent<TransformComponent>(entity);
-            ImGui::SliderFloat3("Position", &component.position[0], -25.0f, 25.0f);
-            ImGui::SliderFloat3("Rotation", &component.rotation[0], -180.0f, 180.0f);
-            ImGui::SliderFloat3("Scale", &component.scale[0], -10.0f, 10.0f);
+            
+            if (ImGui::SliderFloat3("Position##TransformComponentPosition", &component.position[0], -25.0f, 25.0f)) {
+                CGX_TRACE("Entity {}: TransformComponent Position changed to [{}, {}, {}]", entity, component.position.x, component.position.y, component.position.z);
+            }
+            if (ImGui::SliderFloat3("Rotation##TransformComponentRotation", &component.rotation[0], -180.0f, 180.0f)) {
+                CGX_TRACE("Entity {}: TransformComponent Rotation changed to [{}, {}, {}]", entity, component.rotation.x, component.rotation.y, component.rotation.z);
+            }
+            if (ImGui::SliderFloat3("Scale##TransformComponentScale", &component.scale[0], -10.0f, 10.0f)) {
+                CGX_TRACE("Entity {}: TransformComponent Scale changed to [{}, {}, {}]", entity, component.scale.x, component.scale.y, component.scale.z);
+            }
         }
 
         ImGui::Separator();
+
+        ImGui::PopID();
         
     }
 
@@ -229,11 +262,14 @@ namespace cgx::gui
         float available_space = ImGui::GetContentRegionAvail().x;
         ImGui::SameLine(available_space - button_width);
 
+        ImGui::PushID(entity);
+
         if (has_light_component)
         {
             if (ImGui::Button("Remove##RemoveLightComponent"))
             {
                 m_ecs_manager->RemoveComponent<LightComponent>(entity);
+                CGX_TRACE("Entity {}: Removed LightComponent", entity);
                 has_light_component = false;
             }
         }
@@ -241,6 +277,7 @@ namespace cgx::gui
         {
             if (ImGui::Button("Add##AddLightComponent"))
             {
+                CGX_TRACE("Entity {}: Added LightComponent", entity)
                 m_ecs_manager->AddComponent(
                     entity,
                     LightComponent {
@@ -255,12 +292,21 @@ namespace cgx::gui
         if (has_light_component)
         {
             auto& component = m_ecs_manager->GetComponent<LightComponent>(entity);
-            ImGui::SliderFloat3("Position", &component.position[0], -100.0f, 100.0f);
-            ImGui::SliderFloat3("Color", &component.color[0], 0.0f, 1.0f);
-            ImGui::SliderFloat("Intensity", &component.intensity, 0.0f, 100.0f);
+            if (ImGui::SliderFloat3("Position##LightPosition", &component.position[0], -100.0f, 100.0f))
+            {
+                CGX_TRACE("Entity {}: LightComponent Position changed to [{}, {}, {}]", entity, component.position.x, component.position.y, component.position.z);
+            }
+            if (ImGui::SliderFloat3("Color##LightColor", &component.color[0], 0.0f, 1.0f)) { 
+                CGX_TRACE("Entity {}: LightComponent Color changed to [{}, {}, {}]", entity, component.color.x, component.color.y, component.color.z);
+            }
+            if (ImGui::SliderFloat("Intensity##LightIntensity", &component.intensity, 0.0f, 100.0f)) {
+                CGX_TRACE("Entity {}: LightComponent Intensity changed to {}", entity, component.intensity); 
+            }
         }
 
         ImGui::Separator();
+
+        ImGui::PopID();
     }
 
 }
