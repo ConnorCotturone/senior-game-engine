@@ -4,6 +4,7 @@
 #define SANDBOX_H
 
 #include "cpgx.h"
+#include "cubemap.h"
 #include <string>
 
 
@@ -36,6 +37,8 @@ private:
 
     std::vector<std::string> shader_names;
     std::unordered_map<std::string, std::shared_ptr<cgx::graphics::Shader>> loaded_shaders;
+
+    std::unique_ptr<cgx::graphics::Cubemap> m_skybox;
 
 };
 

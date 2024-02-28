@@ -68,6 +68,7 @@ target_sources(cgx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/shader.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/texture.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/resource_manager.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/framebuffer.h 
 
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/camera.cpp 
@@ -77,6 +78,7 @@ target_sources(cgx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/shader.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/texture.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render/resource_manager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/render/framebuffer.cpp
     
     # Components
     PUBLIC
