@@ -1,6 +1,5 @@
 // Copyright © 2024 Jacob Curlin
 
-
 #include "../include/cubemap.h"
 #include <glad/glad.h>
 #include <stb/stb_image.h>
