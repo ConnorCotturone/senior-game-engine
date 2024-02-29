@@ -1,13 +1,15 @@
 add_executable(sandbox 
     # headers
     include/sandbox.h
-    include/cubemap.h
+    include/cube_map.h
 
     # source
-    src/sandbox.cpp 
-    src/cubemap.cpp
+    src/sandbox.cpp
+    src/cube_map.cpp
 )
 
-target_link_libraries(sandbox PRIVATE 
+target_include_directories(sandbox PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+target_link_libraries(sandbox PRIVATE
     cgx 
 )

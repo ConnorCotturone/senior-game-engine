@@ -1,12 +1,10 @@
 // Copyright © 2024 Jacob Curlin
 
-#ifndef SANDBOX_H
-#define SANDBOX_H
+#pragma once
 
-#include "cpgx.h"
-#include "cubemap.h"
+#include "cgx.h"
+#include "cube_map.h"
 #include <string>
-
 
 #define AMBIENT_MAP_BIT 1
 #define DIFFUSE_MAP_BIT 2
@@ -14,12 +12,12 @@
 #define NORMAL_MAP_BIT 8
 
 
-class Sandbox : public Engine
+class Sandbox : public cgx::core::Engine
 {
 
 public:
-    Sandbox();              
-    ~Sandbox();     
+    Sandbox();
+    ~Sandbox();
 
 protected:
     void Initialize() override;
@@ -33,13 +31,11 @@ protected:
 private:
 
     std::vector<std::string> model_filenames;
-    std::unordered_map<std::string, std::shared_ptr<cgx::graphics::Model>> loaded_models;
+    std::unordered_map<std::string, std::shared_ptr<cgx::render::Model>> loaded_models;
 
     std::vector<std::string> shader_names;
-    std::unordered_map<std::string, std::shared_ptr<cgx::graphics::Shader>> loaded_shaders;
+    std::unordered_map<std::string, std::shared_ptr<cgx::render::Shader>> loaded_shaders;
 
-    std::unique_ptr<cgx::graphics::Cubemap> m_skybox;
+    std::unique_ptr<cgx::render::CubeMap> m_skybox;
 
 };
-
-#endif // SANDBOX_H

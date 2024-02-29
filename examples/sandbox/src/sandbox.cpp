@@ -1,6 +1,6 @@
 // Copyright © 2024 Jacob Curlin
 
-#include "../include/sandbox.h"
+#include "sandbox.h"
 
 Sandbox::Sandbox() {}
 
@@ -11,20 +11,20 @@ void Sandbox::Initialize()
     Engine::Initialize();
 
     // model filenames (relative to data directory - 'cgx/cgx/data/')
-    model_filenames = {"soccerball/ball.obj", "light_cube/light_cube.obj", "sponza/sponza.obj", "backpack/backpack.obj" };
+    model_filenames = {"soccerball/ball.obj", "light_cube/light_cube.obj", "sponza/sponza.obj", "backpack/backpack.obj", "sponza-2/sponza.obj" };
     // shader names (relative to shader directory - 'cgx/cgx/shaders/', extension-less filename of vert & frag shaders)
     shader_names = {"model", "lighting"};   // i.e. "model" -> fetches 'cgx/cgx/shaders/model.vs' and 'cgx/cgx/shaders/model.fs'
 
     std::vector<std::string> face_paths = {
-        "/Users/curlin/dev/cgx/build/cgx/data/skybox_mountains/right.jpg",   // right 
-        "/Users/curlin/dev/cgx/build/cgx/data/skybox_mountains/left.jpg",    // left
-        "/Users/curlin/dev/cgx/build/cgx/data/skybox_mountains/top.jpg",     // top
-        "/Users/curlin/dev/cgx/build/cgx/data/skybox_mountains/bottom.jpg",  // bottom
-        "/Users/curlin/dev/cgx/build/cgx/data/skybox_mountains/front.jpg",   // front
-        "/Users/curlin/dev/cgx/build/cgx/data/skybox_mountains/back.jpg",    // back
+        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/right.jpg",   // right
+        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/left.jpg",    // left
+        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/top.jpg",     // top
+        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/bottom.jpg",  // bottom
+        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/front.jpg",   // front
+        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/back.jpg",    // back
     };
 
-    m_skybox = std::make_unique<cgx::graphics::Cubemap>(face_paths, m_resource_manager->loadShader("skybox", m_settings.shader_dir.string()));
+    m_skybox = std::make_unique<cgx::render::CubeMap>(face_paths, m_resource_manager->loadShader("skybox", m_settings.shader_dir.string()));
 
     for (const auto& filename : model_filenames)
     {

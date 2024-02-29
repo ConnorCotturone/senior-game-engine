@@ -1,0 +1,6 @@
+// Copyright © 2024 Jacob Curlin
+
+#pragma once
+
+#define SHADERS_DIRECTORY "@SHADERS_DIRECTORY@"
+#define ASSETS_DIRECTORY "@ASSETS_DIRECTORY@"
