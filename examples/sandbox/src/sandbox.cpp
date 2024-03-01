@@ -1,6 +1,8 @@
 // Copyright © 2024 Jacob Curlin
 
 #include "sandbox.h"
+#include <imgui.h>
+
 
 Sandbox::Sandbox() {}
 
@@ -9,9 +11,53 @@ Sandbox::~Sandbox() {}
 void Sandbox::Initialize()
 {
     Engine::Initialize();
+    LoadAssets();   // load models / textures etc. 
 
-    // model filenames (relative to data directory - 'cgx/cgx/data/')
-    model_filenames = {"soccerball/ball.obj", "light_cube/light_cube.obj", "sponza/sponza.obj", "backpack/backpack.obj", "sponza-2/sponza.obj" };
+
+    m_framebuffer->setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+    m_imgui_viewport_window = std::make_unique<cgx::gui::ImGuiViewportWindow>();
+}
+
+void Sandbox::Update()
+{
+    Engine::Update();
+}
+
+void Sandbox::Render()
+{
+    float r, g, b, a;
+    m_framebuffer->getClearColor(r, g, b, a);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer->getFBO());
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    Engine::Render();
+    SkyboxRender();
+
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);   // unbind framebuffer
+
+    // if (m_imgui_active)
+    Sandbox::ImguiRender();
+}
+
+void Sandbox::ImguiRender()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_imgui_manager->BeginRender();
+    m_imgui_viewport_window->Render();
+    m_imgui_ecs_system->RenderECSMenu();
+    m_imgui_manager->RenderGameview(m_framebuffer->getTextureID());
+    m_imgui_manager->EndRender();
+}
+
+void Sandbox::LoadAssets()
+{
+    model_filenames = {"soccerball/ball.obj", "light_cube/light_cube.obj", "sponza/sponza.obj", "backpack/backpack.obj"};
     // shader names (relative to shader directory - 'cgx/cgx/shaders/', extension-less filename of vert & frag shaders)
     shader_names = {"model", "lighting"};   // i.e. "model" -> fetches 'cgx/cgx/shaders/model.vs' and 'cgx/cgx/shaders/model.fs'
 
@@ -38,15 +84,8 @@ void Sandbox::Initialize()
     }
 }
 
-void Sandbox::Update()
+void Sandbox::SkyboxRender()
 {
-    Engine::Update();
-}
-
-void Sandbox::Render()
-{
-    Engine::Render();
-
     glm::mat4 view = m_camera->GetViewMatrix();
     glm::mat4 projection = glm::perspective(
         glm::radians(m_camera->getZoom()), 
@@ -54,16 +93,6 @@ void Sandbox::Render()
         0.1f, 100.0f
     );
     m_skybox->Draw(view, projection);
-
-    if (m_imgui_active)
-        Sandbox::ImguiRender();
-}
-
-void Sandbox::ImguiRender()
-{
-    m_imgui_manager->BeginRender();
-    m_imgui_ecs_system->RenderECSMenu();
-    m_imgui_manager->EndRender();
 }
 
 void Sandbox::Shutdown() 

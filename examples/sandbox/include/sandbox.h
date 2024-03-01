@@ -4,7 +4,10 @@
 
 #include "cgx.h"
 #include "cube_map.h"
+#include "gui/imgui_viewport_window.h"
+
 #include <string>
+
 
 #define AMBIENT_MAP_BIT 1
 #define DIFFUSE_MAP_BIT 2
@@ -26,6 +29,8 @@ protected:
     void Shutdown() override;
 
     void ImguiRender();
+    void LoadAssets();
+    void SkyboxRender();
 
     std::string message;
 private:
@@ -37,5 +42,8 @@ private:
     std::unordered_map<std::string, std::shared_ptr<cgx::render::Shader>> loaded_shaders;
 
     std::unique_ptr<cgx::render::CubeMap> m_skybox;
+
+    std::unique_ptr<cgx::gui::ImGuiViewportWindow> m_imgui_viewport_window;
+
 
 };

@@ -80,9 +80,12 @@ target_sources(cgx
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_manager.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_ecs_system.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_viewport_window.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_window.h
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_manager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_ecs_system.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_viewport_window.cpp
 
     # utility
     PUBLIC

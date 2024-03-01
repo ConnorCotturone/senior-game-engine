@@ -22,6 +22,7 @@
 #include "render/model.h"
 #include "render/shader.h"
 #include "render/resource_manager.h"
+#include "render/framebuffer.h"
 
 #include "utility/logging.h"
 #include "utility/paths.h"      // cmake-configured shader/asset paths
@@ -70,6 +71,8 @@ namespace cgx::core {
         std::unique_ptr<InputHandler> m_input_handler;
         std::unique_ptr<cgx::gui::ImguiManager> m_imgui_manager;
         std::unique_ptr<cgx::render::Camera> m_camera;
+
+        std::shared_ptr<cgx::render::Framebuffer> m_framebuffer;
 
         // shared
         std::shared_ptr<cgx::ecs::ECSManager> m_ecs_manager;

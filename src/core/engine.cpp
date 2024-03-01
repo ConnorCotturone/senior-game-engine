@@ -74,6 +74,8 @@ namespace cgx::core {
         CGX_ASSERT(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress), "Failed to initialize GLAD.");
         if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) { exit(1); }
 
+        m_framebuffer = std::make_shared<cgx::render::Framebuffer>(m_settings.window_width, m_settings.window_height);
+
         glEnable(GL_DEPTH_TEST);
     }
 
@@ -108,8 +110,9 @@ namespace cgx::core {
     }
 
     void Engine::Render() {
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        /// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // model, view, projection matrices
         glm::mat4 view_mat = m_camera->GetViewMatrix();

@@ -2,9 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/cgx/external/glfw" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/cgx/external/imgui" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/cgx/external/spdlog" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/cgx/external/tinyobjloader" vcs="Git" />
   </component>
 </project>
