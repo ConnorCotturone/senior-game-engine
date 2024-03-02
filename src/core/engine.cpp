@@ -60,13 +60,15 @@ namespace cgx::core {
         m_ecs_manager->RegisterComponent<RenderComponent>();
         m_ecs_manager->RegisterComponent<LightComponent>();
 
-        m_imgui_manager = std::make_unique<cgx::gui::ImguiManager>();
+        m_imgui_manager = std::make_unique<cgx::gui::ImGuiManager>();
         m_imgui_manager->Initialize(m_window_handler->GetGLFWWindow());
 
-        m_imgui_ecs_system = m_ecs_manager->RegisterSystem<cgx::gui::ImguiECSSystem>();
-        m_imgui_ecs_system->Initialize(m_ecs_manager, m_resource_manager);
-        cgx::ecs::Signature imgui_ecs_system_signature;
-        m_ecs_manager->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
+
+        // SETUP IMGUI ECS MANU AS A SYSTEM IN ECS MANAGER
+        // m_imgui_ecs_system = m_ecs_manager->RegisterSystem<cgx::gui::ImguiECSSystem>();
+        // m_imgui_ecs_system->Initialize(m_ecs_manager, m_resource_manager);
+        // cgx::ecs::Signature imgui_ecs_system_signature;
+        // m_ecs_manager->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
 
         m_camera = std::make_unique<cgx::render::Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -74,9 +76,16 @@ namespace cgx::core {
         CGX_ASSERT(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress), "Failed to initialize GLAD.");
         if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) { exit(1); }
 
-        m_framebuffer = std::make_shared<cgx::render::Framebuffer>(m_settings.window_width, m_settings.window_height);
-
         glEnable(GL_DEPTH_TEST);
+
+        m_framebuffer = std::make_shared<cgx::render::Framebuffer>(m_settings.render_width, m_settings.render_height);
+        m_framebuffer->setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+        m_imgui_render_window = std::make_unique<cgx::gui::ImGuiRenderWindow>(m_framebuffer);
+        m_imgui_manager->RegisterImGuiWindow(m_imgui_render_window.get());
+
+        m_imgui_ecs_window = std::make_unique<cgx::gui::ImGuiECSWindow>(m_ecs_manager, m_resource_manager);
+        m_imgui_manager->RegisterImGuiWindow(m_imgui_ecs_window.get());
     }
 
     void Engine::Update() {
@@ -118,7 +127,7 @@ namespace cgx::core {
         glm::mat4 view_mat = m_camera->GetViewMatrix();
         glm::mat4 proj_mat = glm::perspective(
                 glm::radians(m_camera->getZoom()),
-                (float) m_settings.window_width / (float) m_settings.window_height,
+                (float) m_settings.render_width / (float) m_settings.render_height,
                 0.1f, 100.0f
         );
 

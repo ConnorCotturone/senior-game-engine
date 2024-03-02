@@ -79,13 +79,16 @@ target_sources(cgx
     # gui
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_manager.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_ecs_system.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_viewport_window.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_render_window.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_window.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_performance_window.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_ecs_window.h
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_manager.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_ecs_system.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_viewport_window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_render_window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_performance_window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_ecs_window.cpp
 
     # utility
     PUBLIC
@@ -99,9 +102,14 @@ target_sources(cgx
 )
 
 target_include_directories(cgx 
-    PUBLIC include/
-    SYSTEM PUBLIC external/
-    PRIVATE src/
+    PUBLIC 
+        include/
+
+    SYSTEM PUBLIC 
+        external/
+    
+    PRIVATE 
+        src/
 )
 
 target_link_libraries(cgx PUBLIC
@@ -109,6 +117,7 @@ target_link_libraries(cgx PUBLIC
     OpenGL::GL
     imgui
     spdlog::spdlog_header_only
+    glm::glm-header-only
 )
 
 set(SHADERS_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/data/shaders/")

@@ -14,9 +14,6 @@ void Sandbox::Initialize()
     LoadAssets();   // load models / textures etc. 
 
 
-    m_framebuffer->setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-
-    m_imgui_viewport_window = std::make_unique<cgx::gui::ImGuiViewportWindow>();
 }
 
 void Sandbox::Update()
@@ -28,8 +25,9 @@ void Sandbox::Render()
 {
     float r, g, b, a;
     m_framebuffer->getClearColor(r, g, b, a);
-
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer->getFBO());
+
+    glViewport(0, 0, m_settings.render_width, m_settings.render_height);
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -38,6 +36,7 @@ void Sandbox::Render()
 
     
     glBindFramebuffer(GL_FRAMEBUFFER, 0);   // unbind framebuffer
+    glViewport(0, 0, m_settings.window_width, m_settings.window_height);
 
     // if (m_imgui_active)
     Sandbox::ImguiRender();
@@ -48,11 +47,7 @@ void Sandbox::ImguiRender()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_imgui_manager->BeginRender();
-    m_imgui_viewport_window->Render();
-    m_imgui_ecs_system->RenderECSMenu();
-    m_imgui_manager->RenderGameview(m_framebuffer->getTextureID());
-    m_imgui_manager->EndRender();
+    m_imgui_manager->Render();
 }
 
 void Sandbox::LoadAssets()
@@ -89,7 +84,7 @@ void Sandbox::SkyboxRender()
     glm::mat4 view = m_camera->GetViewMatrix();
     glm::mat4 projection = glm::perspective(
         glm::radians(m_camera->getZoom()), 
-        (float)m_settings.window_width / (float)m_settings.window_height, 
+        (float)m_settings.render_width / (float)m_settings.render_height, 
         0.1f, 100.0f
     );
     m_skybox->Draw(view, projection);

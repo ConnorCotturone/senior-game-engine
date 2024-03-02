@@ -15,7 +15,8 @@
 #include "event/event_handler.h"
 
 #include "gui/imgui_manager.h"
-#include "gui/imgui_ecs_system.h"
+#include "gui/imgui_render_window.h"
+#include "gui/imgui_ecs_window.h"
 
 #include "render/camera.h"
 #include "render/mesh.h"
@@ -33,8 +34,11 @@
 namespace cgx::core {
 
     struct EngineSettings {
-        int window_width = 800;
-        int window_height = 600;
+        uint32_t window_width = 1920;
+        uint32_t window_height = 1080;
+        uint32_t render_width = 1280;
+        uint32_t render_height = 720;
+
         std::filesystem::path shader_dir = SHADERS_DIRECTORY;
         std::filesystem::path asset_dir = ASSETS_DIRECTORY;
     };
@@ -69,15 +73,17 @@ namespace cgx::core {
         std::unique_ptr<cgx::core::Window> m_window_handler;
         std::unique_ptr<cgx::event::EventHandler> m_event_handler;
         std::unique_ptr<InputHandler> m_input_handler;
-        std::unique_ptr<cgx::gui::ImguiManager> m_imgui_manager;
         std::unique_ptr<cgx::render::Camera> m_camera;
 
         std::shared_ptr<cgx::render::Framebuffer> m_framebuffer;
 
         // shared
         std::shared_ptr<cgx::ecs::ECSManager> m_ecs_manager;
-        std::shared_ptr<cgx::gui::ImguiECSSystem> m_imgui_ecs_system;
         std::shared_ptr<cgx::render::ResourceManager> m_resource_manager;
+
+        std::unique_ptr<cgx::gui::ImGuiManager> m_imgui_manager;
+        std::unique_ptr<cgx::gui::ImGuiRenderWindow> m_imgui_render_window;
+        std::unique_ptr<cgx::gui::ImGuiECSWindow> m_imgui_ecs_window;
 
         bool m_is_running;
         bool m_imgui_active;

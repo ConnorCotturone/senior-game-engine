@@ -24,9 +24,11 @@ namespace cgx::gui
         void UnregisterImGuiWindow(ImGuiWindow* window);
 
         void Render();
-
         void BeginRender();
         void EndRender();
+
+        void RenderCoreMenu();
+
 
     private:
         std::vector<ImGuiWindow*> m_imgui_windows;

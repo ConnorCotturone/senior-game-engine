@@ -15,8 +15,18 @@ namespace cgx::gui
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-        ioConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+        ImGui::StyleColorsDark();
+
+        ImGuiStyle& style = ImGui::GetStyle();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            style.WindowRounding = 0.0f;
+            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        }
 
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 330");
@@ -59,11 +69,13 @@ namespace cgx::gui
     {
         BeginRender();
 
+        RenderCoreMenu();
+
         for (auto& window : m_imgui_windows)
         {
-            if (window->isVisible())
+            if (window->isActive())
             {
-                window->Render();
+                window->RenderFrame();
             }
         }
 
@@ -75,27 +87,69 @@ namespace cgx::gui
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // Dock Space
+        static bool dockSpaceOpen = true;
+        static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->Pos);
+        ImGui::SetNextWindowSize(viewport->Size);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+        ImGui::Begin("DockSpace Demo", &dockSpaceOpen, window_flags);
+        ImGui::PopStyleVar(3);
+
+        // DockSpace
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+        {
+            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+        }
+
+        ImGui::End(); // End the DockSpace window
     }
 
     void ImGuiManager::EndRender()
     {
         ImGui::Render();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;                             
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)              
+        {                                                                        
+            GLFWwindow* backup_current_context = glfwGetCurrentContext();       
+            ImGui::UpdatePlatformWindows();                                     
+            ImGui::RenderPlatformWindowsDefault();                              
+            glfwMakeContextCurrent(backup_current_context);
+        }
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-
-    /*
-    void ImguiManager::RenderGameview(uint32_t texture)
+    void ImGuiManager::RenderCoreMenu()
     {
-        ImGui::Begin("Game View");
-        ImVec2 image_size = ImGui::GetContentRegionAvail();
-        ImGui::Image(
-            (void*) (GLuint)texture, 
-            image_size,
-            ImVec2(0.0f, 1.0f),
-            ImVec2(1.0f, 0.0f)
-        );
-        ImGui::End();
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("CGX_GUI_CORE"))
+            {
+                for (auto& window : m_imgui_windows)
+                {
+                    if (ImGui::MenuItem(window->getTitle().c_str(), "", window->isActive()))
+                    {
+                        window->ToggleVisibility();
+                    }
+                }
+            ImGui::EndMenu();
+            }
+        ImGui::EndMainMenuBar();
+        }
     }
-    */
+
+
+
 }
