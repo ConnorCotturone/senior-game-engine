@@ -1,6 +1,7 @@
 // Copyright © 2024 Jacob Curlin
 
 #include "gui/imgui_manager.h"
+#include "gui/imgui_performance_window.h"
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>

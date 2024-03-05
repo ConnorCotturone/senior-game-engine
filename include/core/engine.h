@@ -18,6 +18,7 @@
 #include "gui/imgui_manager.h"
 #include "gui/imgui_render_window.h"
 #include "gui/imgui_ecs_window.h"
+#include "gui/imgui_performance_window.h"
 
 #include "render/camera.h"
 #include "render/mesh.h"
@@ -87,6 +88,7 @@ namespace cgx::core {
         std::unique_ptr<cgx::gui::ImGuiManager> m_imgui_manager;
         std::unique_ptr<cgx::gui::ImGuiRenderWindow> m_imgui_render_window;
         std::unique_ptr<cgx::gui::ImGuiECSWindow> m_imgui_ecs_window;
+        std::unique_ptr<cgx::gui::ImGuiPerformanceWindow> m_imgui_performance_window;
 
         bool m_is_running;
         bool m_imgui_active;

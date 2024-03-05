@@ -84,6 +84,9 @@ namespace cgx::core {
         m_imgui_manager->RegisterImGuiWindow(m_imgui_ecs_window.get());
         // cgx::ecs::Signature imgui_ecs_system_signature;
         // m_ecs_manager->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
+
+        m_imgui_performance_window = std::make_unique<cgx::gui::ImGuiPerformanceWindow>(m_time_system);
+        m_imgui_manager->RegisterImGuiWindow(m_imgui_performance_window.get());
     }
 
     void Engine::Update() {

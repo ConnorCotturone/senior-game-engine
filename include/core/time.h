@@ -8,7 +8,6 @@
 
 namespace cgx::core
 {
-
     class Time; // fwd. decl. 
 
     class TimeContext
