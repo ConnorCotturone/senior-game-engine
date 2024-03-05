@@ -73,9 +73,11 @@ namespace cgx::gui
 
         for (auto& window : m_imgui_windows)
         {
-            if (window->isActive())
+            if (window->isVisible())
             {
-                window->RenderFrame();
+                window->Begin();
+                window->Render();
+                window->End();
             }
         }
 
@@ -139,9 +141,9 @@ namespace cgx::gui
             {
                 for (auto& window : m_imgui_windows)
                 {
-                    if (ImGui::MenuItem(window->getTitle().c_str(), "", window->isActive()))
+                    if (ImGui::MenuItem(window->getTitle().c_str(), "", window->isVisible()))
                     {
-                        window->ToggleVisibility();
+                        window->Show();
                     }
                 }
             ImGui::EndMenu();
@@ -149,7 +151,4 @@ namespace cgx::gui
         ImGui::EndMainMenuBar();
         }
     }
-
-
-
 }

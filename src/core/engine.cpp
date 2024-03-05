@@ -37,6 +37,9 @@ namespace cgx::core {
         cgx::utility::LoggingHandler::Initialize();
         CGX_TRACE("engine - initializing")
 
+        m_time_system = Time();
+        m_time_system.Start();
+
         m_window_handler = std::make_unique<cgx::core::Window>();
         m_window_handler->Initialize(m_settings.window_width,
                                      m_settings.window_height,
@@ -63,13 +66,6 @@ namespace cgx::core {
         m_imgui_manager = std::make_unique<cgx::gui::ImGuiManager>();
         m_imgui_manager->Initialize(m_window_handler->GetGLFWWindow());
 
-
-        // SETUP IMGUI ECS MANU AS A SYSTEM IN ECS MANAGER
-        // m_imgui_ecs_system = m_ecs_manager->RegisterSystem<cgx::gui::ImguiECSSystem>();
-        // m_imgui_ecs_system->Initialize(m_ecs_manager, m_resource_manager);
-        // cgx::ecs::Signature imgui_ecs_system_signature;
-        // m_ecs_manager->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
-
         m_camera = std::make_unique<cgx::render::Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
 
         // check glad loaded
@@ -86,9 +82,16 @@ namespace cgx::core {
 
         m_imgui_ecs_window = std::make_unique<cgx::gui::ImGuiECSWindow>(m_ecs_manager, m_resource_manager);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_ecs_window.get());
+        // cgx::ecs::Signature imgui_ecs_system_signature;
+        // m_ecs_manager->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
     }
 
     void Engine::Update() {
+        m_time_system.Update();
+        TimeContext& update_time_data = m_time_system.getLastUpdate();
+        double& delta_time = update_time_data.frame_time;
+        
+
         m_event_handler->Update();
 
         if (!m_imgui_active) {
@@ -104,13 +107,13 @@ namespace cgx::core {
 
             // keyboard camera updates
             if (m_input_handler->IsKeyPressed(GLFW_KEY_W))
-                m_camera->KeyboardUpdate(cgx::render::kForward, m_time_data.delta_time);
+                m_camera->KeyboardUpdate(cgx::render::kForward, delta_time);
             if (m_input_handler->IsKeyPressed(GLFW_KEY_A))
-                m_camera->KeyboardUpdate(cgx::render::kLeft, m_time_data.delta_time);
+                m_camera->KeyboardUpdate(cgx::render::kLeft, delta_time);
             if (m_input_handler->IsKeyPressed(GLFW_KEY_S))
-                m_camera->KeyboardUpdate(cgx::render::kBackward, m_time_data.delta_time);
+                m_camera->KeyboardUpdate(cgx::render::kBackward, delta_time);
             if (m_input_handler->IsKeyPressed(GLFW_KEY_D))
-                m_camera->KeyboardUpdate(cgx::render::kRight, m_time_data.delta_time);
+                m_camera->KeyboardUpdate(cgx::render::kRight, delta_time);
         } else {
             m_input_handler->m_ignore_next_mouse_update = true;
             glfwSetInputMode(m_window_handler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -179,5 +182,4 @@ namespace cgx::core {
     }
 
     void Engine::Shutdown() {}
-
 }

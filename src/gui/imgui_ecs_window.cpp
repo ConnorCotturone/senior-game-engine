@@ -20,7 +20,7 @@ namespace cgx::gui
     ImGuiECSWindow::ImGuiECSWindow(
         std::shared_ptr<cgx::ecs::ECSManager> ecs_manager,
         std::shared_ptr<cgx::render::ResourceManager> resource_manager)
-        : ImGuiWindow("ECS Management", 100, 200, 1920, 1200) 
+        : ImGuiWindow("ECS Management")
         , m_ecs_manager(std::move(ecs_manager))
         , m_resource_manager(std::move(resource_manager))
         , m_current_entity(cgx::ecs::MAX_ENTITIES)

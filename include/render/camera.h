@@ -4,6 +4,7 @@
 #pragma once
 
 #include "core/common.h"
+#include "core/time.h"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,22 +30,21 @@ namespace cgx::render
     {
     public:
         
-        explicit Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-                        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
-                        float yaw = kYaw,
-                        float pitch = kPitch);
+        explicit Camera(
+            glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+            float yaw = kYaw,
+            float pitch = kPitch
+        );
+        ~Camera() = default ;
 
         glm::mat4 GetViewMatrix();
 
         // nodiscard attribute encourages caller not to ignore return value
         [[nodiscard]] float getZoom() const { return m_zoom; }
 
-        // glm::vec3 getPosition() { return Position; }
-        // glm::vec3 getFront() { return Front; }
-
         void KeyboardUpdate(Camera_Movement direction, double time_step);
         void MouseUpdate(double x_offset, double y_offset, GLboolean constrain_pitch);
-
 
     private:
         void updateCameraVectors();

@@ -1,4 +1,5 @@
 // Copyright © 2024 Jacob Curlin
+// source: https://github.com/tksuoran/erhe/blob/main/src/erhe/imgui/erhe_imgui/imgui_window.hpp
 
 #pragma once
 
@@ -10,50 +11,35 @@ namespace cgx::gui
     class ImGuiWindow
     {
     public:
-        ImGuiWindow(const std::string& title, 
-                    std::uint32_t min_width = 150, std::uint32_t min_height = 200, 
-                    std::uint32_t max_width = 1920, std::uint32_t max_height = 1920)
-            : m_title(title)
-            , m_active(true) 
-            , m_min_size(ImVec2(static_cast<float>(min_width), static_cast<float>(min_height)))
-            , m_max_size(ImVec2(static_cast<float>(max_width), static_cast<float>(max_height))) {}
-
+        ImGuiWindow(const std::string& title);
         virtual ~ImGuiWindow() = default;
 
-        void RenderFrame();
-        virtual void Render() = 0;
+        void Begin();                   // ImGui::Begin() called (start actual ImGui window)
+        void End();                     // ImGui::End() called (end actual ImGui window)
 
-        void ToggleVisibility() { m_active = !m_active; }
-        void Show() { m_active = true; }
-        void Hide() { m_active = false; }
+        virtual void Render() = 0;      // child-defined, actual ImGui window UI logic
+        virtual void OnBegin();         // child-defined operations before Begin() calls ImGui::Begin()
+        virtual void OnEnd();           // child-defined operations before End() calls ImGui::End()
 
-        [[nodiscard]] std::string& getTitle() { return m_title; }
-        [[nodiscard]] bool isActive() { return m_active; }
+        void Show(); 
+        void Hide(); 
 
-        void setMinSize(std::uint32_t width, std::uint32_t height) 
-        { 
-            m_min_size = ImVec2(static_cast<float>(width), static_cast<float>(height));
-        }
-        void setMaxSize(std::uint32_t width, std::uint32_t height)
-        {
-            m_max_size = ImVec2(static_cast<float>(width), static_cast<float>(height));
-        }
+        [[nodiscard]] const std::string& getTitle();
+        [[nodiscard]] bool isVisible();
 
-        void getMinSize(std::uint32_t& width, std::uint32_t& height)
-        {
-            width = static_cast<std::uint32_t>(m_min_size.x);
-            height = static_cast<std::uint32_t>(m_min_size.y);
-        }
-        void getMaxSize(std::uint32_t& width, std::uint32_t& height)
-        {
-            width = static_cast<std::uint32_t>(m_max_size.x);
-            height = static_cast<std::uint32_t>(m_max_size.y);
-        }
+        void setMinSize(float width, float height); 
+        void setMaxSize(float width, float height);
 
     protected:
-        std::string m_title;
-        bool        m_active;
-        ImVec2      m_min_size;
-        ImVec2      m_max_size;
+        std::string m_title                 = "Window";
+        bool        m_is_visible            = true;
+        bool        m_is_hovered            = false;
+        bool        m_enforce_aspect_ratio  = false;
+
+        ImGuiWindowFlags m_window_flags;
+
+        float       m_aspect_ratio{1};
+        float       m_min_size[2]{240.0f, 180.0f};      // minimum window size
+        float       m_max_size[2]{1920.0f, 1080.0f};    // maximum window size
     };
 }

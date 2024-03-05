@@ -7,6 +7,7 @@
 #include "core/common.h"
 #include "core/window.h"
 #include "core/input_handler.h"
+#include "core/time.h"
 
 #include "ecs/ecs_manager.h"
 #include "ecs/components/transform_component.h"
@@ -68,6 +69,8 @@ namespace cgx::core {
     protected:
         EngineSettings m_settings;
         TimeData m_time_data;
+
+        Time m_time_system;
 
         // unique
         std::unique_ptr<cgx::core::Window> m_window_handler;

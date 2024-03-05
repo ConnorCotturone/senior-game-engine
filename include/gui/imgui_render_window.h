@@ -18,13 +18,15 @@ namespace cgx::gui
         virtual ~ImGuiRenderWindow() override;
 
         void Render() override;
+        void OnBegin() override;
+        void OnEnd() override;
 
     protected:
         std::shared_ptr<cgx::render::Framebuffer> m_framebuffer;
+        
+        float m_texture_size[2];
 
         GLuint m_texture_id;
-        float m_view_width;
-        float m_view_height;
     };
 
 }

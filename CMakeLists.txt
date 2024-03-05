@@ -24,10 +24,12 @@ target_sources(cgx
         ${CMAKE_CURRENT_SOURCE_DIR}/include/core/engine.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/core/input_handler.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/core/window.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/core/time.h
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/core/engine.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/core/input_handler.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/core/window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/time.cpp
 
     # ecs
     PUBLIC
