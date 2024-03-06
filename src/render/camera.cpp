@@ -30,6 +30,10 @@ namespace cgx::render
             m_position -= m_right * velocity;
         if (direction == kRight)
             m_position += m_right * velocity;
+        if (direction == kDown)
+            m_position -= m_up * velocity;
+        if (direction == kUp)
+            m_position += m_up * velocity;
     }
 
     void Camera::MouseUpdate(double x_offset, double y_offset, GLboolean constrain_pitch = true)

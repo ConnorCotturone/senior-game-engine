@@ -24,7 +24,10 @@ namespace cgx::gui
         , m_ecs_manager(std::move(ecs_manager))
         , m_resource_manager(std::move(resource_manager))
         , m_current_entity(cgx::ecs::MAX_ENTITIES)
-        {}
+        {
+            //m_min_size[0] = 400;
+            //m_min_size[1] = 400;
+        }
 
     void ImGuiECSWindow::Render()
     {
@@ -48,14 +51,14 @@ namespace cgx::gui
         const char* count_field_text = "Count: ###";
         float count_field_width = ImGui::CalcTextSize(count_field_text).x + ImGui::GetStyle().FramePadding.x;
 
-        ImGui::Text("Active Entities");
+        //ImGui::Text("Active Entities");
 
-        ImGui::SameLine();
+        //ImGui::SameLine();
 
-        float available_space = ImGui::GetContentRegionAvail().x;
-        ImGui::SameLine(available_space - count_field_width);
+        //float available_space = ImGui::GetContentRegionAvail().x;
+        //ImGui::SameLine(available_space - count_field_width);
 
-        ImGui::Text("Count: %zu", m_entities.size());
+        ImGui::Text("Active Entities Count: %zu", m_entities.size());
 
         if (ImGui::BeginChild("ActiveEntityList##ActiveEntityList", ImVec2(0, 150), true))
         {
@@ -89,6 +92,7 @@ namespace cgx::gui
         if (ImGui::Button("Destroy Entity##ActiveEntityList", ImVec2(button_width, 0)))
         {
             m_ecs_manager->DestroyEntity(m_current_entity);
+            m_entities.erase(m_current_entity);
             CGX_TRACE("> Destroyed Entity {}", m_current_entity);
             m_current_entity = cgx::ecs::MAX_ENTITIES;
         }

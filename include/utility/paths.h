@@ -2,5 +2,5 @@
 
 #pragma once
 
-#define SHADERS_DIRECTORY "C:/Users/curlin/dev/senior-game-engine/out/build/x64-Debug/data/shaders/"
-#define ASSETS_DIRECTORY "C:/Users/curlin/dev/senior-game-engine/out/build/x64-Debug/data/assets/"
+#define SHADERS_DIRECTORY "C:/Users/Chip/source/repos/senior-game-engine/out/build/x64-Debug/data/shaders/"
+#define ASSETS_DIRECTORY "C:/Users/Chip/source/repos/senior-game-engine/out/build/x64-Debug/data/assets/"
