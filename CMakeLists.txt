@@ -2,7 +2,7 @@
 # cgx engine
 
 cmake_minimum_required(VERSION 3.6.0)
-project(cgx VERSION 0.1.0)
+project(senior-game-engine VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,9 +15,9 @@ find_package(OpenGL REQUIRED)
 add_subdirectory(external)
 
 # cgx Static Library Creation
-add_library(cgx STATIC "")
+add_library(senior-game-engine STATIC "")
 
-target_sources(cgx
+target_sources(senior-game-engine
     # core
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include/core/common.h
@@ -103,7 +103,7 @@ target_sources(cgx
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/glad.c
 )
 
-target_include_directories(cgx 
+target_include_directories(senior-game-engine 
     PUBLIC 
         include/
 
@@ -114,7 +114,7 @@ target_include_directories(cgx
         src/
 )
 
-target_link_libraries(cgx PUBLIC
+target_link_libraries(senior-game-engine PUBLIC
     glfw
     OpenGL::GL
     imgui
@@ -129,7 +129,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/utility/paths.h.in
                @ONLY )
 
 # copy assets to build directory
-add_custom_command(
+ add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/data/shaders
@@ -143,5 +143,8 @@ add_custom_command(
         ${CMAKE_CURRENT_SOURCE_DIR}/data/assets
         ${ASSETS_DIRECTORY}
 )
+
+
+
 
 add_subdirectory(examples)
