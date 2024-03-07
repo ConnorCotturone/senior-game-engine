@@ -13,7 +13,26 @@ void Sandbox::Initialize()
     Engine::Initialize();
     LoadAssets();   // load models / textures etc. 
 
+    // setup MSAA frame buffer object
+    glGenFramebuffers(1, &m_msaa_framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_msaa_framebuffer);
 
+    unsigned int msaa_tex_color_buf;
+    glGenTextures(1, &msaa_tex_color_buf);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaa_tex_color_buf);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, m_settings.render_width, m_settings.render_height, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, msaa_tex_color_buf, 0);
+
+    unsigned int msaa_rbo;
+    glGenRenderbuffers(1, &msaa_rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, msaa_rbo);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, m_settings.render_width, m_settings.render_height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, msaa_rbo);
+
+    CGX_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "MSAA Framebuffer not complete.");
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Sandbox::Update()
@@ -25,17 +44,39 @@ void Sandbox::Render()
 {
     float r, g, b, a;
     m_framebuffer->getClearColor(r, g, b, a);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer->getFBO());
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if (m_render_settings->msaa)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_msaa_framebuffer);
+    }
+    else // msaa disabled
+    { 
+        glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer->getFBO()); 
+    }
+
+    // glEnable(GL_DEPTH_TEST);
+
 
     glViewport(0, 0, m_settings.render_width, m_settings.render_height);
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Engine::Render();
-    SkyboxRender();
-
+    if (m_render_settings->skybox) { SkyboxRender(); }
     
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);   // unbind framebuffer
+    if (m_render_settings->msaa)
+    {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, m_msaa_framebuffer);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer->getFBO());
+        glBlitFramebuffer(0, 0, m_settings.render_width, m_settings.render_height,
+                        0, 0, m_settings.render_width, m_settings.render_height, 
+                        GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     glViewport(0, 0, m_settings.window_width, m_settings.window_height);
 
     // if (m_imgui_active)

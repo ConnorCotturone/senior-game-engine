@@ -85,12 +85,14 @@ target_sources(cgx
         ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_window.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_performance_window.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_ecs_window.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/gui/imgui_render_settings_window.h
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_manager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_render_window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_performance_window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_ecs_window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/gui/imgui_render_settings_window.cpp
 
     # utility
     PUBLIC

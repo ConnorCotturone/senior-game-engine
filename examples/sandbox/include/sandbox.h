@@ -42,4 +42,8 @@ private:
     std::unordered_map<std::string, std::shared_ptr<cgx::render::Shader>> loaded_shaders;
 
     std::unique_ptr<cgx::render::CubeMap> m_skybox;
+
+    unsigned int m_msaa_framebuffer;
+    bool m_msaa_enabled = false;
+    bool m_skybox_enabled = false;
 };

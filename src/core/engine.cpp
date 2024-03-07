@@ -82,11 +82,17 @@ namespace cgx::core {
 
         m_imgui_ecs_window = std::make_unique<cgx::gui::ImGuiECSWindow>(m_ecs_manager, m_resource_manager);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_ecs_window.get());
-        // cgx::ecs::Signature imgui_ecs_system_signature;
-        // m_ecs_manager->SetSystemSignature<cgx::gui::ImguiECSSystem>(imgui_ecs_system_signature);
 
         m_imgui_performance_window = std::make_unique<cgx::gui::ImGuiPerformanceWindow>(m_time_system);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_performance_window.get());
+
+        m_render_settings = std::make_shared<cgx::gui::RenderSettings>();
+        m_render_settings->msaa = false;
+        m_render_settings->skybox = true;
+
+
+        m_imgui_render_settings_window = std::make_unique<cgx::gui::ImGuiRenderSettingsWindow>(m_render_settings);
+        m_imgui_manager->RegisterImGuiWindow(m_imgui_render_settings_window.get());
     }
 
     void Engine::Update() {
