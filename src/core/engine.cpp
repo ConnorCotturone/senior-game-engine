@@ -117,6 +117,18 @@ namespace cgx::core {
                 m_camera->KeyboardUpdate(cgx::render::kBackward, delta_time);
             if (m_input_handler->IsKeyPressed(GLFW_KEY_D))
                 m_camera->KeyboardUpdate(cgx::render::kRight, delta_time);
+            if (m_input_handler->IsKeyPressed(GLFW_KEY_UP))
+                m_camera->KeyboardUpdate(cgx::render::kForward, delta_time);
+            if (m_input_handler->IsKeyPressed(GLFW_KEY_LEFT))
+                m_camera->KeyboardUpdate(cgx::render::kLeft, delta_time);
+            if (m_input_handler->IsKeyPressed(GLFW_KEY_DOWN))
+                m_camera->KeyboardUpdate(cgx::render::kBackward, delta_time);
+            if (m_input_handler->IsKeyPressed(GLFW_KEY_RIGHT))
+                m_camera->KeyboardUpdate(cgx::render::kRight, delta_time);
+            if (m_input_handler->IsKeyPressed(GLFW_KEY_SPACE))
+                m_camera->KeyboardUpdate(cgx::render::kUp, delta_time);
+            if (m_input_handler->IsKeyPressed(GLFW_KEY_LEFT_CONTROL))
+                m_camera->KeyboardUpdate(cgx::render::kDown, delta_time);
         } else {
             m_input_handler->m_ignore_next_mouse_update = true;
             glfwSetInputMode(m_window_handler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);

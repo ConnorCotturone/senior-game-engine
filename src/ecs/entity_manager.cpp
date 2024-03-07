@@ -10,7 +10,7 @@ namespace cgx::ecs
     {
         for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
         {
-            m_available_entities.push(entity);
+            m_available_entities.push_back(entity);
         }
     }
 
@@ -21,7 +21,7 @@ namespace cgx::ecs
         if (!(m_active_entity_count < MAX_ENTITIES)) { CGX_INFO("MAX_ENTITIES : {}", MAX_ENTITIES); }
 
         Entity id = m_available_entities.front();        // fetch 
-        m_available_entities.pop();
+        m_available_entities.pop_front();
         ++m_active_entity_count;
 
         return id;
@@ -34,7 +34,7 @@ namespace cgx::ecs
 
         m_signatures[entity].reset();   // reset entity's signature (bitset) 
 
-        m_available_entities.push(entity);
+        m_available_entities.push_front(entity);
         --m_active_entity_count;
     }
 

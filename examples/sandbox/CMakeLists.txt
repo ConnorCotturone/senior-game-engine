@@ -11,5 +11,7 @@ add_executable(sandbox
 target_include_directories(sandbox PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(sandbox PRIVATE
-    cgx 
+    senior-game-engine 
 )
+
+

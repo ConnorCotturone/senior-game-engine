@@ -17,7 +17,9 @@ namespace cgx::render
         kForward,
         kBackward,
         kLeft,
-        kRight
+        kRight,
+        kUp,
+        kDown
     };
 
     constexpr float kYaw                = -90.0f;

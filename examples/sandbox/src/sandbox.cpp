@@ -57,12 +57,12 @@ void Sandbox::LoadAssets()
     shader_names = {"model", "lighting"};   // i.e. "model" -> fetches 'cgx/cgx/shaders/model.vs' and 'cgx/cgx/shaders/model.fs'
 
     std::vector<std::string> face_paths = {
-        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/right.jpg",   // right
-        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/left.jpg",    // left
-        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/top.jpg",     // top
-        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/bottom.jpg",  // bottom
-        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/front.jpg",   // front
-        "/Users/curlin/dev/cgx/build/cgx_debug/data/assets/skybox_mountains/back.jpg",    // back
+        (m_settings.asset_dir / "skybox_mountains/right.jpg").string(),   // right
+        (m_settings.asset_dir / "skybox_mountains/left.jpg").string(),    // left
+        (m_settings.asset_dir / "skybox_mountains/top.jpg").string(),     // top
+        (m_settings.asset_dir / "skybox_mountains/bottom.jpg").string(),  // bottom
+        (m_settings.asset_dir / "skybox_mountains/front.jpg").string(),   // front
+        (m_settings.asset_dir / "skybox_mountains/back.jpg").string(),    // back
     };
 
     m_skybox = std::make_unique<cgx::render::CubeMap>(face_paths, m_resource_manager->loadShader("skybox", m_settings.shader_dir.string()));
