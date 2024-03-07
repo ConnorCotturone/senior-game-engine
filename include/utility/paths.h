@@ -2,5 +2,8 @@
 
 #pragma once
 
-#define SHADERS_DIRECTORY "/Users/curlin/dev/cgx/build/data/shaders/"
-#define ASSETS_DIRECTORY "/Users/curlin/dev/cgx/build/data/assets/"
+// note: this file is excluded from version control to prevent conflicts.
+// These definitions are automatically synchronized by the CMAKE configuration. 
+// CMAKE determines their values using their CMAKE-variable assignements within 'paths.h.in'.
+#define SHADERS_DIRECTORY ""
+#define ASSETS_DIRECTORY ""

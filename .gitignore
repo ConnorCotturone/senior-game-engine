@@ -1,6 +1,6 @@
 build/
+out/
 cmake-build-debug/
 .vscode/
 .vs/
-out/
 imgui.ini
