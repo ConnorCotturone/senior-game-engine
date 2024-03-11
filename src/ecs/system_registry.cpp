@@ -1,11 +1,11 @@
 // Copyright © 2024 Jacob Curlin
 
 #include "core/common.h"
-#include "ecs/system_manager.h"
+#include "ecs/system_registry.h"
 
 namespace cgx::ecs
 {
-    void SystemManager::EntityDestroyed(Entity entity)
+    void SystemRegistry::EntityDestroyed(Entity entity)
     {
         for (auto const& pair : m_systems)
         {
@@ -15,7 +15,7 @@ namespace cgx::ecs
         }
     }
 
-    void SystemManager::EntitySignatureChanged(Entity entity, Signature entitySignature)
+    void SystemRegistry::EntitySignatureChanged(Entity entity, Signature entitySignature)
     {
         for (auto const& pair : m_systems)
         {

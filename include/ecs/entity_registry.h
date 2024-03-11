@@ -2,17 +2,15 @@
 
 #pragma once
 
-#include "ecs/ecs_types.h"
+#include "ecs/common.h"
 #include <array>
-#include <bitset>
 #include <queue>
-#include <vector>
 
 namespace cgx::ecs
 {
-    class EntityManager {
+    class EntityRegistry {
     public:
-        EntityManager();
+        EntityRegistry();
 
         Entity CreateEntity();
         void DestroyEntity(Entity entity);
@@ -23,8 +21,8 @@ namespace cgx::ecs
         [[nodiscard]] std::vector<Entity> GetActiveEntities() const;
 
     private:
-        std::queue<Entity> m_available_entities{};
-        std::array<Signature, MAX_ENTITIES> m_signatures{};
+        std::queue<Entity>                      m_available_entities{};
+        std::array<Signature, s_max_entities>   m_signatures{};
 
         uint32_t m_active_entity_count;
     };

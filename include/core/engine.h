@@ -9,11 +9,10 @@
 #include "core/input_handler.h"
 #include "core/time.h"
 
-#include "ecs/ecs_manager.h"
+#include "ecs/ecs_provider.h"
 #include "ecs/components/transform_component.h"
 #include "ecs/components/render_component.h"
 #include "ecs/components/light_component.h"
-#include "event/event_handler.h"
 
 #include "gui/imgui_manager.h"
 #include "gui/imgui_render_window.h"
@@ -76,14 +75,13 @@ namespace cgx::core {
 
         // unique
         std::unique_ptr<cgx::core::Window> m_window_handler;
-        std::unique_ptr<cgx::event::EventHandler> m_event_handler;
         std::unique_ptr<InputHandler> m_input_handler;
         std::unique_ptr<cgx::render::Camera> m_camera;
 
         std::shared_ptr<cgx::render::Framebuffer> m_framebuffer;
 
         // shared
-        std::shared_ptr<cgx::ecs::ECSManager> m_ecs_manager;
+        std::shared_ptr<cgx::ecs::ECSProvider> m_ecs_provider;
         std::shared_ptr<cgx::render::ResourceManager> m_resource_manager;
 
         std::unique_ptr<cgx::gui::ImGuiManager> m_imgui_manager;

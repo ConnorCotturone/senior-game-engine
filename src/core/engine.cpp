@@ -47,6 +47,7 @@ namespace cgx::core {
 
         m_input_handler = std::make_unique<cgx::core::InputHandler>(m_window_handler->GetGLFWWindow());
 
+        /*
         m_event_handler = std::make_unique<cgx::event::EventHandler>(m_window_handler->GetGLFWWindow());
         m_event_handler->RegisterKeyCallback([this](int key, int scancode, int action, int mods) {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -54,14 +55,14 @@ namespace cgx::core {
             if (key == GLFW_KEY_M && action == GLFW_PRESS)
                 m_imgui_active = !m_imgui_active;
         });
+        */
 
         m_resource_manager = std::make_unique<cgx::render::ResourceManager>();
 
-        m_ecs_manager = std::make_shared<cgx::ecs::ECSManager>();
-        m_ecs_manager->Initialize();
-        m_ecs_manager->RegisterComponent<TransformComponent>();
-        m_ecs_manager->RegisterComponent<RenderComponent>();
-        m_ecs_manager->RegisterComponent<LightComponent>();
+        m_ecs_provider = std::make_shared<cgx::ecs::ECSProvider>(m_time_system);
+        m_ecs_provider->RegisterComponent<TransformComponent>();
+        m_ecs_provider->RegisterComponent<RenderComponent>();
+        m_ecs_provider->RegisterComponent<LightComponent>();
 
         m_imgui_manager = std::make_unique<cgx::gui::ImGuiManager>();
         m_imgui_manager->Initialize(m_window_handler->GetGLFWWindow());
@@ -80,7 +81,7 @@ namespace cgx::core {
         m_imgui_render_window = std::make_unique<cgx::gui::ImGuiRenderWindow>(m_framebuffer);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_render_window.get());
 
-        m_imgui_ecs_window = std::make_unique<cgx::gui::ImGuiECSWindow>(m_ecs_manager, m_resource_manager);
+        m_imgui_ecs_window = std::make_unique<cgx::gui::ImGuiECSWindow>(m_ecs_provider, m_resource_manager);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_ecs_window.get());
 
         m_imgui_performance_window = std::make_unique<cgx::gui::ImGuiPerformanceWindow>(m_time_system);
@@ -99,10 +100,8 @@ namespace cgx::core {
         m_time_system.Update();
         TimeContext& update_time_data = m_time_system.getLastUpdate();
         double& delta_time = update_time_data.frame_time;
-        
 
-        m_event_handler->Update();
-
+        /*
         if (!m_imgui_active) {
             if (m_input_handler->m_ignore_next_mouse_update) {
                 m_input_handler->resetMouseOffset();
@@ -128,6 +127,7 @@ namespace cgx::core {
             glfwSetInputMode(m_window_handler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             m_camera->MouseUpdate((double) 0.0, (double) 0.0, true);
         }
+        */
     }
 
     void Engine::Render() {
@@ -144,21 +144,21 @@ namespace cgx::core {
         );
 
         // iterate through active entities present in the ecs manager
-        for (auto &entity: m_ecs_manager->getActiveEntities()) {
+        for (auto &entity: m_ecs_provider->getActiveEntities()) {
             glm::mat4 model_mat(1.0f);
 
             // skip rendering of entity if it has no RenderComponent
-            if (!m_ecs_manager->HasComponent<RenderComponent>(entity)) { continue; }
+            if (!m_ecs_provider->HasComponent<RenderComponent>(entity)) { continue; }
 
-            std::shared_ptr<cgx::render::Model> model = m_ecs_manager->GetComponent<RenderComponent>(entity).model;
-            std::shared_ptr<cgx::render::Shader> shader = m_ecs_manager->GetComponent<RenderComponent>(entity).shader;
+            std::shared_ptr<cgx::render::Model> model = m_ecs_provider->GetComponent<RenderComponent>(entity).model;
+            std::shared_ptr<cgx::render::Shader> shader = m_ecs_provider->GetComponent<RenderComponent>(entity).shader;
 
             // skip rendering of entity if either RenderComponent.model or RenderComponent.shader uninitialized
             if (!(model && shader)) { continue; }
 
             // if entity has a TransformComponent, apply transformations to model matrix
-            if (m_ecs_manager->HasComponent<TransformComponent>(entity)) {
-                auto &transform = m_ecs_manager->GetComponent<TransformComponent>(entity);
+            if (m_ecs_provider->HasComponent<TransformComponent>(entity)) {
+                auto &transform = m_ecs_provider->GetComponent<TransformComponent>(entity);
 
                 // apply rotations transformations around each axis
                 model_mat = glm::rotate(model_mat, glm::radians(transform.rotation.x),

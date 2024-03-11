@@ -5,16 +5,14 @@
 
 #pragma once
 
-#include "core/common.h"
-#include "ecs/ecs_types.h"
+#include "ecs/common.h"
 #include "ecs/component_array.h"
-#include "utility/logging.h"
 
 #include <unordered_map>
 
 namespace cgx::ecs
 {
-    class ComponentManager
+    class ComponentRegistry
     {
     public:
         // Registers a new component type T. Associates string name representation of component type

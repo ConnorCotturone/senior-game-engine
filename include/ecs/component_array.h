@@ -1,22 +1,9 @@
 // Copyright © 2024 Jacob Curlin
 
-// Implements a packed array structure for storage/management of a particular component type's data. 
-// reference: https://austinmorlan.com/posts/entity_component_system/
-
-#pragma once
-
-#include "core/common.h"
-#include "ecs/ecs_types.h"
-#include "ecs/entity_manager.h"
+#include "ecs/i_component_array.h"
 
 namespace cgx::ecs
 {
-    class IComponentArray
-    {
-    public:
-        virtual ~IComponentArray() = default;
-        virtual void EntityDestroyed(Entity entity) = 0;
-    };
 
     template<typename T>
     class ComponentArray : public IComponentArray
@@ -76,11 +63,13 @@ namespace cgx::ecs
         }
 
     private:
-        std::array<T, MAX_ENTITIES> m_component_array;
+        std::array<T, s_max_entities> m_component_array;
 
         std::unordered_map<Entity, size_t> m_entity_to_index_map;
         std::unordered_map<size_t, Entity> m_index_to_entity_map;
 
         size_t m_size = 0;
-    };
-}
+
+    }; // class ComponentArray
+
+} // namespace cgx::ecs

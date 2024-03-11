@@ -31,7 +31,7 @@ namespace cgx::gui
 
         double      m_total_uptime;
         uint64_t    m_total_frame_count;
-    };
-    
 
-}
+    }; // class ImGuiPerformanceWindow
+
+} // namespace cgx::gui

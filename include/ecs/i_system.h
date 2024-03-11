@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ecs/ecs_types.h"
+#include "ecs/common.h"
 #include <set>
 
 namespace cgx::ecs

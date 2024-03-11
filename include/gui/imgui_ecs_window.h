@@ -3,9 +3,9 @@
 #pragma once
 
 #include "gui/imgui_window.h"
-#include "ecs/ecs_manager.h"
+#include "ecs/ecs_provider.h"
 #include "ecs/i_system.h"
-#include "ecs/ecs_types.h"
+#include "ecs/common.h"
 #include "render/resource_manager.h"
 
 namespace cgx::gui
@@ -14,7 +14,7 @@ namespace cgx::gui
     {
     public:
         ImGuiECSWindow(
-            std::shared_ptr<cgx::ecs::ECSManager> ecs_manager,
+            std::shared_ptr<cgx::ecs::ECSProvider> ecs_manager,
             std::shared_ptr<cgx::render::ResourceManager> resource_manager);
             
         void Render() override;
@@ -26,9 +26,9 @@ namespace cgx::gui
         void DisplayLightComponentEditor(cgx::ecs::Entity entity);
 
     private:
-        std::shared_ptr<cgx::ecs::ECSManager>               m_ecs_manager;        
-        std::shared_ptr<cgx::render::ResourceManager>     m_resource_manager;
-        cgx::ecs::Entity                                    m_current_entity;
+        std::shared_ptr<cgx::ecs::ECSProvider>          m_ecs_provider;        
+        std::shared_ptr<cgx::render::ResourceManager>   m_resource_manager;
+        cgx::ecs::Entity                                m_current_entity;
     };
 }
 

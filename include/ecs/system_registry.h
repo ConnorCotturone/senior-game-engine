@@ -2,15 +2,14 @@
 
 #pragma once
 
-#include "core/common.h"
-#include "ecs/ecs_types.h"
+#include "ecs/common.h"
 #include "ecs/i_system.h"
 #include <unordered_map>
 
 namespace cgx::ecs
 {
 
-    class SystemManager
+    class SystemRegistry
     {
     public:
         template<typename T>

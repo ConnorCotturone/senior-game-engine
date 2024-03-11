@@ -33,30 +33,41 @@ target_sources(cgx
 
     # ecs
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/ecs_types.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/common.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/i_system.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/i_component_array.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/component_array.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/component_manager.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/entity_manager.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/system_manager.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/ecs_manager.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/component_registry.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/entity_registry.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/system_registry.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/ecs_provider.h
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/component_manager.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/entity_manager.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/system_manager.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/ecs_manager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/component_registry.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/entity_registry.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/system_registry.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/ecs_provider.cpp
 
     # components
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/components/transform_component.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/components/render_component.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/components/light_component.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/components/camera_component.h
 
     # event
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/event/event_handler.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/i_event.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/i_event_delegate.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/i_event_dispatcher.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/i_event_listener.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/event.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/event_delegate.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/event_dispatcher.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/event/event_handler.h
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/event/event_handler.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/event/i_event.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/event/i_event_listener.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ecs/event/event_handler.cpp
 
     # render
     PUBLIC
