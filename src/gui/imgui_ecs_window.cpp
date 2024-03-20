@@ -6,6 +6,7 @@
 #include "ecs/components/transform_component.h"
 #include "ecs/components/render_component.h"
 #include "ecs/components/light_component.h"
+#include "ecs/components/rigid_body.h"
 #include "utility/logging.h"
 
 #include <imgui/imgui.h>
@@ -18,12 +19,12 @@
 namespace cgx::gui 
 {
     ImGuiECSWindow::ImGuiECSWindow(
-        std::shared_ptr<cgx::ecs::ECSProvider> ecs_provider,
+        std::shared_ptr<cgx::ecs::ECSManager> ecs_manager,
         std::shared_ptr<cgx::render::ResourceManager> resource_manager)
         : ImGuiWindow("ECS Management")
-        , m_ecs_provider(std::move(ecs_provider))
+        , m_ecs_manager(std::move(ecs_manager))
         , m_resource_manager(std::move(resource_manager))
-        , m_current_entity(cgx::ecs::s_max_entities)
+        , m_current_entity(cgx::ecs::MAX_ENTITIES)
         {}
 
     void ImGuiECSWindow::Render()
@@ -32,12 +33,13 @@ namespace cgx::gui
 
         RenderActiveEntitiesSection();
          
-        if (m_current_entity != cgx::ecs::s_max_entities)
+        if (m_current_entity != cgx::ecs::MAX_ENTITIES)
         {
             ImGui::Separator();
             DisplayRenderComponentEditor(m_current_entity);
             DisplayTransformComponentEditor(m_current_entity);
             DisplayLightComponentEditor(m_current_entity);
+            DisplayRigidBodyEditor(m_current_entity);
         }
 
         // ImGui::End();
@@ -76,7 +78,7 @@ namespace cgx::gui
 
         if (ImGui::Button("Create Entity##ActiveEntityList", ImVec2(button_width, 0)))
         {
-            cgx::ecs::Entity new_entity = m_ecs_provider->CreateEntity();
+            cgx::ecs::Entity new_entity = m_ecs_manager->CreateEntity();
             m_entities.insert(new_entity);
             m_current_entity = new_entity;
             CGX_INFO("> Created Entity {}", m_current_entity);
@@ -84,13 +86,13 @@ namespace cgx::gui
 
         ImGui::SameLine();
         
-        bool delete_button_active = (m_current_entity == cgx::ecs::s_max_entities);
+        bool delete_button_active = (m_current_entity == cgx::ecs::MAX_ENTITIES);
         if (delete_button_active) { ImGui::BeginDisabled(); }
         if (ImGui::Button("Destroy Entity##ActiveEntityList", ImVec2(button_width, 0)))
         {
-            m_ecs_provider->DestroyEntity(m_current_entity);
+            m_ecs_manager->DestroyEntity(m_current_entity);
             CGX_TRACE("> Destroyed Entity {}", m_current_entity);
-            m_current_entity = cgx::ecs::s_max_entities;
+            m_current_entity = cgx::ecs::MAX_ENTITIES;
         }
         if (delete_button_active) { ImGui::EndDisabled(); }
     }
@@ -98,7 +100,7 @@ namespace cgx::gui
 
     void ImGuiECSWindow::DisplayRenderComponentEditor(cgx::ecs::Entity entity)
     {
-        bool has_render_component = m_ecs_provider->HasComponent<RenderComponent>(entity);
+        bool has_render_component = m_ecs_manager->HasComponent<RenderComponent>(entity);
 
         const char* button_text = has_render_component ? "Remove" : "Add";
         float button_width = ImGui::CalcTextSize(button_text).x + ImGui::GetStyle().FramePadding.x * 2.0f;
@@ -114,7 +116,7 @@ namespace cgx::gui
         {
             if (ImGui::Button("Remove##RemoveRenderComponent"))
             {
-                m_ecs_provider->RemoveComponent<RenderComponent>(entity);
+                m_ecs_manager->RemoveComponent<RenderComponent>(entity);
                 CGX_TRACE("Entity {}: Removed RenderComponent", entity);
                 has_render_component = false;
             }
@@ -123,7 +125,7 @@ namespace cgx::gui
         {
             if (ImGui::Button("Add##AddRenderComponent"))
             {
-                m_ecs_provider->AddComponent(
+                m_ecs_manager->AddComponent(
                     entity,
                     RenderComponent {
                         .model = nullptr,
@@ -136,7 +138,7 @@ namespace cgx::gui
 
         if (has_render_component)
         {
-            auto& render_component = m_ecs_provider->GetComponent<RenderComponent>(entity);
+            auto& render_component = m_ecs_manager->GetComponent<RenderComponent>(entity);
 
             if (ImGui::BeginCombo(
                 "Model##RenderComponentModel", 
@@ -191,7 +193,7 @@ namespace cgx::gui
 
     void ImGuiECSWindow::DisplayTransformComponentEditor(cgx::ecs::Entity entity)
     {
-        bool has_transform_component = m_ecs_provider->HasComponent<TransformComponent>(entity);
+        bool has_transform_component = m_ecs_manager->HasComponent<TransformComponent>(entity);
 
         const char* button_text = has_transform_component ? "Remove" : "Add";
         float button_width = ImGui::CalcTextSize(button_text).x + ImGui::GetStyle().FramePadding.x * 2.0f;
@@ -207,7 +209,7 @@ namespace cgx::gui
         {
             if (ImGui::Button("Remove##RemoveTransformComponent"))
             {
-                m_ecs_provider->RemoveComponent<TransformComponent>(entity);
+                m_ecs_manager->RemoveComponent<TransformComponent>(entity);
                 CGX_TRACE("Entity {}: Removed TransformComponent", entity);
                 has_transform_component = false;
             }
@@ -216,7 +218,7 @@ namespace cgx::gui
         {
             if (ImGui::Button("Add##AddTransformComponent"))
             {
-                m_ecs_provider->AddComponent(
+                m_ecs_manager->AddComponent(
                     entity, 
                     TransformComponent {
                         .position = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -230,7 +232,7 @@ namespace cgx::gui
 
         if (has_transform_component)
         {
-            auto& component = m_ecs_provider->GetComponent<TransformComponent>(entity);
+            auto& component = m_ecs_manager->GetComponent<TransformComponent>(entity);
             
             if (ImGui::SliderFloat3("Position##TransformComponentPosition", &component.position[0], -25.0f, 25.0f)) {
                 CGX_TRACE("Entity {}: TransformComponent Position changed to [{}, {}, {}]", entity, component.position.x, component.position.y, component.position.z);
@@ -249,9 +251,65 @@ namespace cgx::gui
         
     }
 
+    void ImGuiECSWindow::DisplayRigidBodyEditor(cgx::ecs::Entity entity)
+    {
+        bool has_rigid_body = m_ecs_manager->HasComponent<RigidBody>(entity);  
+
+        const char* button_text = has_rigid_body ? "Remove" : "Add";
+
+        float button_width = ImGui::CalcTextSize(button_text).x + ImGui::GetStyle().FramePadding.x * 2.0f;
+
+        ImGui::Text("Rigid Body Component");
+
+        float available_space = ImGui::GetContentRegionAvail().x;
+        ImGui::SameLine(available_space - button_width);
+
+        ImGui::PushID(static_cast<int>(entity));
+
+        if (has_rigid_body)
+        {
+            if (ImGui::Button("Remove##RemoveRigidBody"))
+            {
+                m_ecs_manager->RemoveComponent<RigidBody>(entity);
+                CGX_TRACE("Entity {}: Removed RigidBody", entity);
+                has_rigid_body = false;
+            }
+        }
+        else
+        {
+            if (ImGui::Button("Add##AddRigidBodyComponent"))
+            {
+                CGX_TRACE("Entity {}: Added RigidBodyComponent", entity)
+                m_ecs_manager->AddComponent(
+                    entity,
+                    RigidBody {
+                        .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
+                        .acceleration = glm::vec3(0.0f, 0.0f, 0.0f),
+                });
+                has_rigid_body = true;
+            }
+        }
+
+        if (has_rigid_body)
+        {
+            auto& component = m_ecs_manager->GetComponent<RigidBody>(entity);
+            if (ImGui::SliderFloat3("Velocity##RigidBodyPosition", &component.velocity[0], -100.0f, 100.0f))
+            {
+                CGX_TRACE("Entity {}: RigidBody Component Velocity changed to [{}, {}, {}]", entity, component.velocity.x, component.velocity.y, component.velocity.z);
+            }
+            if (ImGui::SliderFloat3("Acceleration##RigidBodyAcceleration", &component.acceleration[0], 0.0f, 1.0f)) { 
+                CGX_TRACE("Entity {}: RigidBody Component Acceleration changed to [{}, {}, {}]", entity, component.acceleration.x, component.acceleration.y, component.acceleration.z);
+            }
+        }
+
+        ImGui::Separator();
+
+        ImGui::PopID();
+    }
+
     void ImGuiECSWindow::DisplayLightComponentEditor(cgx::ecs::Entity entity)
     {
-        bool has_light_component = m_ecs_provider->HasComponent<LightComponent>(entity);
+        bool has_light_component = m_ecs_manager->HasComponent<LightComponent>(entity);
 
         const char* button_text = has_light_component ? "Remove" : "Add";
         float button_width = ImGui::CalcTextSize(button_text).x + ImGui::GetStyle().FramePadding.x * 2.0f;
@@ -267,7 +325,7 @@ namespace cgx::gui
         {
             if (ImGui::Button("Remove##RemoveLightComponent"))
             {
-                m_ecs_provider->RemoveComponent<LightComponent>(entity);
+                m_ecs_manager->RemoveComponent<LightComponent>(entity);
                 CGX_TRACE("Entity {}: Removed LightComponent", entity);
                 has_light_component = false;
             }
@@ -277,7 +335,7 @@ namespace cgx::gui
             if (ImGui::Button("Add##AddLightComponent"))
             {
                 CGX_TRACE("Entity {}: Added LightComponent", entity)
-                m_ecs_provider->AddComponent(
+                m_ecs_manager->AddComponent(
                     entity,
                     LightComponent {
                         .position = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -290,7 +348,7 @@ namespace cgx::gui
 
         if (has_light_component)
         {
-            auto& component = m_ecs_provider->GetComponent<LightComponent>(entity);
+            auto& component = m_ecs_manager->GetComponent<LightComponent>(entity);
             if (ImGui::SliderFloat3("Position##LightPosition", &component.position[0], -100.0f, 100.0f))
             {
                 CGX_TRACE("Entity {}: LightComponent Position changed to [{}, {}, {}]", entity, component.position.x, component.position.y, component.position.z);

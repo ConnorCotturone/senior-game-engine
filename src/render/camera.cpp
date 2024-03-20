@@ -5,8 +5,9 @@
 namespace cgx::render
 {
 
-    Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-        : m_position(position)
+    Camera::Camera(std::shared_ptr<cgx::core::InputManager> input_manager, glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+        : m_input_manager(input_manager)
+        , m_position(position)
         , m_up(up)
         , m_yaw(yaw)
         , m_pitch(pitch)
@@ -14,25 +15,46 @@ namespace cgx::render
         updateCameraVectors();
     }
 
-    glm::mat4 Camera::GetViewMatrix()
+    void Camera::Update(double dt)
     {
-        return glm::lookAt(m_position, m_position + m_front, m_up);
+        if (m_manual_control_enabled)
+        {
+            double x_offset, y_offset;
+            m_input_manager->getMouseOffset(x_offset, y_offset);
+            Look(x_offset, y_offset, true);
+            
+            if (m_input_manager->isKeyPressed(87)) { Translate(kForward, dt);  }
+            if (m_input_manager->isKeyPressed(83)) { Translate(kBackward, dt); }
+            if (m_input_manager->isKeyPressed(65)) { Translate(kLeft, dt);     }
+            if (m_input_manager->isKeyPressed(68)) { Translate(kRight, dt);    }
+        }
+        updateCameraVectors();
     }
 
-    void Camera::KeyboardUpdate(Camera_Movement direction, double deltaTime)
+    void Camera::Translate(TranslateDirection dir, double dt)
     {
-        float velocity = m_movement_speed * static_cast<float>(deltaTime);
-        if (direction == kForward)
-            m_position += m_front * velocity;
-        if (direction == kBackward)
-            m_position -= m_front * velocity;
-        if (direction == kLeft)
-            m_position -= m_right * velocity;
-        if (direction == kRight)
-            m_position += m_right * velocity;
+        // CGX_TRACE("Camera::Translate [dir={}] [dt={}]", dir, dt);
+        float velocity = m_movement_speed * static_cast<float>(dt);
+        switch (dir) 
+        {
+            case kForward:
+                m_position += m_front * velocity;
+                break;
+            case kBackward:
+                m_position -= m_front * velocity;
+                break;
+            case kLeft:
+                m_position -= m_right * velocity;
+                break;
+            case kRight:
+                m_position += m_right * velocity;
+                break;
+            default:
+                break;
+        };
     }
 
-    void Camera::MouseUpdate(double x_offset, double y_offset, GLboolean constrain_pitch = true)
+    void Camera::Look(double x_offset, double y_offset, GLboolean constrain_pitch = true)
     {
         m_yaw     += static_cast<float>(x_offset * m_mouse_sensitivity);
         m_pitch   += static_cast<float>(y_offset * m_mouse_sensitivity);
@@ -44,8 +66,6 @@ namespace cgx::render
             if (m_pitch < -89.0f)
                 m_pitch = -89.0f;
         }
-
-        updateCameraVectors();
     }
         
     void Camera::updateCameraVectors()

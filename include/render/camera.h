@@ -5,6 +5,8 @@
 
 #include "core/common.h"
 #include "core/time.h"
+#include "core/input_manager.h"
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,7 +15,7 @@
 namespace cgx::render
 {
 
-    enum Camera_Movement {
+    enum TranslateDirection {
         kForward,
         kBackward,
         kLeft,
@@ -31,6 +33,7 @@ namespace cgx::render
     public:
         
         explicit Camera(
+            std::shared_ptr<cgx::core::InputManager> input_manager,
             glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
             float yaw = kYaw,
@@ -38,16 +41,23 @@ namespace cgx::render
         );
         ~Camera() = default ;
 
-        glm::mat4 GetViewMatrix();
+        void Update(double dt);
+
+        glm::mat4 getViewMatrix() const { return glm::lookAt(m_position, m_position + m_front, m_up); }
 
         // nodiscard attribute encourages caller not to ignore return value
         [[nodiscard]] float getZoom() const { return m_zoom; }
 
-        void KeyboardUpdate(Camera_Movement direction, double time_step);
-        void MouseUpdate(double x_offset, double y_offset, GLboolean constrain_pitch);
+        void Translate(TranslateDirection dir, double dt);
+        void Look(double x_offset, double y_offset, GLboolean constrain_pitch);
 
     private:
+
         void updateCameraVectors();
+
+        std::shared_ptr<cgx::core::InputManager> m_input_manager;
+
+        bool m_manual_control_enabled = true;
 
         glm::vec3 m_position        = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 m_front           = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -60,6 +70,9 @@ namespace cgx::render
         float m_movement_speed      = kMovementSpeed;
         float m_mouse_sensitivity   = kMouseSensitivity;
         float m_zoom                = kZoom;
+
+        float near_clip             = 0.1f;
+        float far_clip              = 100.0f;
     };
 
 }

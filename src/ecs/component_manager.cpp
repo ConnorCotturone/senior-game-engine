@@ -1,10 +1,10 @@
 // Copyright © 2024 Jacob Curlin
 
-#include "ecs/component_registry.h"
+#include "ecs/component_manager.h"
 
 namespace cgx::ecs
 {
-    void ComponentRegistry::EntityDestroyed(Entity entity)
+    void ComponentManager::EntityDestroyed(Entity entity)
     {
         for (auto const& pair : m_component_arrays)
         {

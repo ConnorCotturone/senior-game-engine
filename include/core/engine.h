@@ -5,14 +5,21 @@
 #define GL_SILENCE_DEPRECATION
 
 #include "core/common.h"
-#include "core/window.h"
-#include "core/input_handler.h"
+#include "core/window_manager.h"
+#include "core/input_manager.h"
 #include "core/time.h"
 
-#include "ecs/ecs_provider.h"
+// (todo: remove)
+#include "core/input_handler.h"
+
+#include "core/physics_system.h"
+
+#include "ecs/ecs_manager.h"
 #include "ecs/components/transform_component.h"
+#include "ecs/components/rigid_body.h"
 #include "ecs/components/render_component.h"
 #include "ecs/components/light_component.h"
+#include "event/event_handler.h"
 
 #include "gui/imgui_manager.h"
 #include "gui/imgui_render_window.h"
@@ -74,14 +81,20 @@ namespace cgx::core {
         Time m_time_system;
 
         // unique
-        std::unique_ptr<cgx::core::Window> m_window_handler;
-        std::unique_ptr<InputHandler> m_input_handler;
+        std::shared_ptr<cgx::core::WindowManager> m_window_manager;
+        std::unique_ptr<cgx::event::EventHandler> m_event_handler;
+        std::shared_ptr<InputManager> m_input_manager;
         std::unique_ptr<cgx::render::Camera> m_camera;
+
+        // (todo: remove)
+        std::unique_ptr<InputHandler> m_input_handler;
+
+        std::shared_ptr<cgx::core::PhysicsSystem> m_physics_system;
 
         std::shared_ptr<cgx::render::Framebuffer> m_framebuffer;
 
         // shared
-        std::shared_ptr<cgx::ecs::ECSProvider> m_ecs_provider;
+        std::shared_ptr<cgx::ecs::ECSManager> m_ecs_manager;
         std::shared_ptr<cgx::render::ResourceManager> m_resource_manager;
 
         std::unique_ptr<cgx::gui::ImGuiManager> m_imgui_manager;

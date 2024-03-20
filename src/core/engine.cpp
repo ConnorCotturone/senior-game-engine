@@ -3,6 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "core/engine.h"
+#include "ecs/events/engine_events.h"
 
 #include <iostream>
 
@@ -28,7 +29,8 @@ namespace cgx::core {
             Update();
             Render();
 
-            m_window_handler->SwapBuffers();
+            m_window_manager->Update();
+
         }
         Shutdown();
     }
@@ -40,34 +42,34 @@ namespace cgx::core {
         m_time_system = Time();
         m_time_system.Start();
 
-        m_window_handler = std::make_unique<cgx::core::Window>();
-        m_window_handler->Initialize(m_settings.window_width,
+        m_ecs_manager = std::make_shared<cgx::ecs::ECSManager>();
+        m_ecs_manager->Initialize();
+        m_ecs_manager->RegisterComponent<TransformComponent>();
+        m_ecs_manager->RegisterComponent<RenderComponent>();
+        m_ecs_manager->RegisterComponent<LightComponent>();
+        m_ecs_manager->RegisterComponent<RigidBody>();
+
+
+        m_window_manager= std::make_shared<cgx::core::WindowManager>();
+        m_window_manager->Initialize(m_settings.window_width,
                                      m_settings.window_height,
                                      "engine");
 
-        m_input_handler = std::make_unique<cgx::core::InputHandler>(m_window_handler->GetGLFWWindow());
+        m_input_manager = std::make_shared<cgx::core::InputManager>(m_ecs_manager, m_window_manager);
+        // (temp : remove this)
 
-        /*
-        m_event_handler = std::make_unique<cgx::event::EventHandler>(m_window_handler->GetGLFWWindow());
-        m_event_handler->RegisterKeyCallback([this](int key, int scancode, int action, int mods) {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-                m_is_running = false;
-            if (key == GLFW_KEY_M && action == GLFW_PRESS)
-                m_imgui_active = !m_imgui_active;
-        });
-        */
+
+        auto onEscapePressed = [this]() {
+            this->m_is_running = false;
+        };
+        InputAction escape_action;
+        escape_action.addCallback(onEscapePressed);
+        InputEventKey escape_key{InputType::KEYBOARD_KEY, InputState::PRESSED, GLFW_KEY_ESCAPE};
+        m_input_manager->BindInputAction(escape_key, escape_action);
+
+
 
         m_resource_manager = std::make_unique<cgx::render::ResourceManager>();
-
-        m_ecs_provider = std::make_shared<cgx::ecs::ECSProvider>(m_time_system);
-        m_ecs_provider->RegisterComponent<TransformComponent>();
-        m_ecs_provider->RegisterComponent<RenderComponent>();
-        m_ecs_provider->RegisterComponent<LightComponent>();
-
-        m_imgui_manager = std::make_unique<cgx::gui::ImGuiManager>();
-        m_imgui_manager->Initialize(m_window_handler->GetGLFWWindow());
-
-        m_camera = std::make_unique<cgx::render::Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
 
         // check glad loaded
         CGX_ASSERT(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress), "Failed to initialize GLAD.");
@@ -78,10 +80,17 @@ namespace cgx::core {
         m_framebuffer = std::make_shared<cgx::render::Framebuffer>(m_settings.render_width, m_settings.render_height);
         m_framebuffer->setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
+        m_camera = std::make_unique<cgx::render::Camera>(m_input_manager, glm::vec3(0.0f, 0.0f, 3.0f));
+
+        // ----- IMGUI ------
+
+        m_imgui_manager = std::make_unique<cgx::gui::ImGuiManager>();
+        m_imgui_manager->Initialize(m_window_manager->getGLFWWindow());
+
         m_imgui_render_window = std::make_unique<cgx::gui::ImGuiRenderWindow>(m_framebuffer);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_render_window.get());
 
-        m_imgui_ecs_window = std::make_unique<cgx::gui::ImGuiECSWindow>(m_ecs_provider, m_resource_manager);
+        m_imgui_ecs_window = std::make_unique<cgx::gui::ImGuiECSWindow>(m_ecs_manager, m_resource_manager);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_ecs_window.get());
 
         m_imgui_performance_window = std::make_unique<cgx::gui::ImGuiPerformanceWindow>(m_time_system);
@@ -91,6 +100,14 @@ namespace cgx::core {
         m_render_settings->msaa = false;
         m_render_settings->skybox = true;
 
+        m_physics_system = m_ecs_manager->RegisterSystem<PhysicsSystem>();
+        {
+            cgx::ecs::Signature signature;
+            signature.set(m_ecs_manager->GetComponentType<RigidBody>());
+            signature.set(m_ecs_manager->GetComponentType<TransformComponent>());
+            m_ecs_manager->SetSystemSignature<PhysicsSystem>(signature);
+        }
+        m_physics_system->Initialize(m_ecs_manager);
 
         m_imgui_render_settings_window = std::make_unique<cgx::gui::ImGuiRenderSettingsWindow>(m_render_settings);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_render_settings_window.get());
@@ -100,6 +117,12 @@ namespace cgx::core {
         m_time_system.Update();
         TimeContext& update_time_data = m_time_system.getLastUpdate();
         double& delta_time = update_time_data.frame_time;
+        
+        m_physics_system->Update(static_cast<float>(delta_time));
+        m_camera->Update(delta_time);
+
+
+        // m_event_handler->Update();
 
         /*
         if (!m_imgui_active) {
@@ -108,7 +131,7 @@ namespace cgx::core {
                 m_input_handler->m_ignore_next_mouse_update = false;
             }
 
-            glfwSetInputMode(m_window_handler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetInputMode(m_window_manager->getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             double x_offset, y_offset;
             m_input_handler->getMouseOffset(x_offset, y_offset);
             m_camera->MouseUpdate(x_offset, y_offset, true);
@@ -124,7 +147,7 @@ namespace cgx::core {
                 m_camera->KeyboardUpdate(cgx::render::kRight, delta_time);
         } else {
             m_input_handler->m_ignore_next_mouse_update = true;
-            glfwSetInputMode(m_window_handler->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            glfwSetInputMode(m_window_manager->getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             m_camera->MouseUpdate((double) 0.0, (double) 0.0, true);
         }
         */
@@ -136,7 +159,7 @@ namespace cgx::core {
         /// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // model, view, projection matrices
-        glm::mat4 view_mat = m_camera->GetViewMatrix();
+        glm::mat4 view_mat = m_camera->getViewMatrix();
         glm::mat4 proj_mat = glm::perspective(
                 glm::radians(m_camera->getZoom()),
                 (float) m_settings.render_width / (float) m_settings.render_height,
@@ -144,21 +167,21 @@ namespace cgx::core {
         );
 
         // iterate through active entities present in the ecs manager
-        for (auto &entity: m_ecs_provider->getActiveEntities()) {
+        for (auto &entity: m_ecs_manager->getActiveEntities()) {
             glm::mat4 model_mat(1.0f);
 
             // skip rendering of entity if it has no RenderComponent
-            if (!m_ecs_provider->HasComponent<RenderComponent>(entity)) { continue; }
+            if (!m_ecs_manager->HasComponent<RenderComponent>(entity)) { continue; }
 
-            std::shared_ptr<cgx::render::Model> model = m_ecs_provider->GetComponent<RenderComponent>(entity).model;
-            std::shared_ptr<cgx::render::Shader> shader = m_ecs_provider->GetComponent<RenderComponent>(entity).shader;
+            std::shared_ptr<cgx::render::Model> model = m_ecs_manager->GetComponent<RenderComponent>(entity).model;
+            std::shared_ptr<cgx::render::Shader> shader = m_ecs_manager->GetComponent<RenderComponent>(entity).shader;
 
             // skip rendering of entity if either RenderComponent.model or RenderComponent.shader uninitialized
             if (!(model && shader)) { continue; }
 
             // if entity has a TransformComponent, apply transformations to model matrix
-            if (m_ecs_provider->HasComponent<TransformComponent>(entity)) {
-                auto &transform = m_ecs_provider->GetComponent<TransformComponent>(entity);
+            if (m_ecs_manager->HasComponent<TransformComponent>(entity)) {
+                auto &transform = m_ecs_manager->GetComponent<TransformComponent>(entity);
 
                 // apply rotations transformations around each axis
                 model_mat = glm::rotate(model_mat, glm::radians(transform.rotation.x),

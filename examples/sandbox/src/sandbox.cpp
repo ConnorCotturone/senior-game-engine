@@ -122,7 +122,7 @@ void Sandbox::LoadAssets()
 
 void Sandbox::SkyboxRender()
 {
-    glm::mat4 view = m_camera->GetViewMatrix();
+    glm::mat4 view = m_camera->getViewMatrix();
     glm::mat4 projection = glm::perspective(
         glm::radians(m_camera->getZoom()), 
         (float)m_settings.render_width / (float)m_settings.render_height, 
