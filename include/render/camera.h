@@ -5,7 +5,7 @@
 
 #include "core/common.h"
 #include "core/time.h"
-#include "core/input_manager.h"
+#include "input/input_manager.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -33,7 +33,7 @@ namespace cgx::render
     public:
         
         explicit Camera(
-            std::shared_ptr<cgx::core::InputManager> input_manager,
+            std::shared_ptr<cgx::input::InputManager> input_manager,
             glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
             float yaw = kYaw,
@@ -51,13 +51,16 @@ namespace cgx::render
         void Translate(TranslateDirection dir, double dt);
         void Look(double x_offset, double y_offset, GLboolean constrain_pitch);
 
+        void EnableManualControl();
+        void DisableManualControl();
+
     private:
 
         void updateCameraVectors();
 
-        std::shared_ptr<cgx::core::InputManager> m_input_manager;
+        std::shared_ptr<cgx::input::InputManager> m_input_manager;
 
-        bool m_manual_control_enabled = true;
+        bool m_manual_control_enabled = false;
 
         glm::vec3 m_position        = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 m_front           = glm::vec3(0.0f, 0.0f, 0.0f);

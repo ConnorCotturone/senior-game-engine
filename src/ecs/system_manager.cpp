@@ -7,6 +7,7 @@ namespace cgx::ecs
 {
     void SystemManager::EntityDestroyed(Entity entity)
     {
+        CGX_TRACE("SystemManager :: EntityDestroyed Called.");
         for (auto const& pair : m_systems)
         {
             auto const& system = pair.second;

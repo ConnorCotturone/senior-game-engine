@@ -10,12 +10,13 @@
 
 namespace cgx::gui
 {
-    class ImGuiECSWindow : public cgx::ecs::System, public ImGuiWindow
+    class ImGuiECSWindow : public ImGuiWindow
     {
     public:
         ImGuiECSWindow(
             std::shared_ptr<cgx::ecs::ECSManager> ecs_manager,
-            std::shared_ptr<cgx::render::ResourceManager> resource_manager);
+            std::shared_ptr<cgx::render::ResourceManager> resource_manager
+        );
             
         void Render() override;
 
@@ -27,8 +28,9 @@ namespace cgx::gui
         void DisplayRigidBodyEditor(cgx::ecs::Entity entity);
 
     private:
+        std::vector<cgx::ecs::Entity>                       m_entities;
         std::shared_ptr<cgx::ecs::ECSManager>               m_ecs_manager;        
-        std::shared_ptr<cgx::render::ResourceManager>     m_resource_manager;
+        std::shared_ptr<cgx::render::ResourceManager>       m_resource_manager;
         cgx::ecs::Entity                                    m_current_entity;
     };
 }

@@ -2,6 +2,7 @@
 
 #include "ecs/ecs_manager.h"
 #include <memory>
+#include "ecs/events/engine_events.h"
 
 namespace cgx::ecs
 {
@@ -15,7 +16,12 @@ namespace cgx::ecs
 
     Entity ECSManager::CreateEntity()
     {
-        return m_entity_manager->CreateEntity();
+        Entity entity = m_entity_manager->CreateEntity();
+        Event event(cgx::events::ecs::ENTITY_CREATED);
+
+        event.SetParam(cgx::events::ecs::ENTITY_ID, entity);
+        SendEvent(event);
+        return entity;
     }
 
     void ECSManager::DestroyEntity(Entity entity)
@@ -23,6 +29,10 @@ namespace cgx::ecs
         m_entity_manager->DestroyEntity(entity);
         m_component_manager->EntityDestroyed(entity);
         m_system_manager->EntityDestroyed(entity);
+
+        Event event(cgx::events::ecs::ENTITY_DESTROYED);
+        event.SetParam(cgx::events::ecs::ENTITY_ID, entity);
+        SendEvent(event);
     }
 
     std::vector<Entity> ECSManager::getActiveEntities() const

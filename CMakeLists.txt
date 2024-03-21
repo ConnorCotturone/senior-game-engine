@@ -25,13 +25,18 @@ target_sources(cgx
         ${CMAKE_CURRENT_SOURCE_DIR}/include/core/window_manager.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/core/time.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/core/physics_system.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/core/input_manager.h
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/core/engine.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/core/window_manager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/core/time.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/core/physics_system.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/input_manager.cpp
+
+    #input
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/input/input_types.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/input/input_manager.h
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/input/input_manager.cpp
 
     # ecs
     PUBLIC
@@ -60,15 +65,7 @@ target_sources(cgx
 
     # events
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/events/input_events.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/ecs/events/engine_events.h
-
-
-    # event
-    # PUBLIC
-    #     ${CMAKE_CURRENT_SOURCE_DIR}/include/event/event_handler.h
-    # PRIVATE
-    #     ${CMAKE_CURRENT_SOURCE_DIR}/src/event/event_handler.cpp
 
     # render
     PUBLIC

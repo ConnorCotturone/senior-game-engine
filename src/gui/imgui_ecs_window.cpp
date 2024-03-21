@@ -7,25 +7,37 @@
 #include "ecs/components/render_component.h"
 #include "ecs/components/light_component.h"
 #include "ecs/components/rigid_body.h"
+#include "ecs/events/engine_events.h"
 #include "utility/logging.h"
 
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 
+#include <algorithm>
 #include <vector>
 
 
 namespace cgx::gui 
 {
     ImGuiECSWindow::ImGuiECSWindow(
-        std::shared_ptr<cgx::ecs::ECSManager> ecs_manager,
-        std::shared_ptr<cgx::render::ResourceManager> resource_manager)
-        : ImGuiWindow("ECS Management")
-        , m_ecs_manager(std::move(ecs_manager))
-        , m_resource_manager(std::move(resource_manager))
+        std::shared_ptr<cgx::ecs::ECSManager> ecs_manager, 
+        std::shared_ptr<cgx::render::ResourceManager> resource_manager
+    )
+        : ImGuiWindow("ECS Management") 
+        , m_ecs_manager(ecs_manager)
+        , m_resource_manager(resource_manager)
         , m_current_entity(cgx::ecs::MAX_ENTITIES)
-        {}
+    {
+        m_ecs_manager->AddEventListener(cgx::events::ecs::ENTITY_CREATED, [this](cgx::ecs::Event& event) {
+            m_entities.push_back(event.GetParam<cgx::ecs::Entity>(cgx::events::ecs::ENTITY_ID));
+        });
+
+        m_ecs_manager->AddEventListener(cgx::events::ecs::ENTITY_DESTROYED, [this](cgx::ecs::Event& event) {
+            auto entity = event.GetParam<cgx::ecs::Entity>(cgx::events::ecs::ENTITY_ID);
+            m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
+        });
+    }
 
     void ImGuiECSWindow::Render()
     {
@@ -38,8 +50,8 @@ namespace cgx::gui
             ImGui::Separator();
             DisplayRenderComponentEditor(m_current_entity);
             DisplayTransformComponentEditor(m_current_entity);
-            DisplayLightComponentEditor(m_current_entity);
             DisplayRigidBodyEditor(m_current_entity);
+            DisplayLightComponentEditor(m_current_entity);
         }
 
         // ImGui::End();
@@ -79,7 +91,7 @@ namespace cgx::gui
         if (ImGui::Button("Create Entity##ActiveEntityList", ImVec2(button_width, 0)))
         {
             cgx::ecs::Entity new_entity = m_ecs_manager->CreateEntity();
-            m_entities.insert(new_entity);
+            // m_entities.insert(new_entity);
             m_current_entity = new_entity;
             CGX_INFO("> Created Entity {}", m_current_entity);
         }
@@ -314,7 +326,7 @@ namespace cgx::gui
         const char* button_text = has_light_component ? "Remove" : "Add";
         float button_width = ImGui::CalcTextSize(button_text).x + ImGui::GetStyle().FramePadding.x * 2.0f;
 
-        ImGui::Text("Light Component");
+        ImGui::Text("Light Component (unimplemented)");
 
         float available_space = ImGui::GetContentRegionAvail().x;
         ImGui::SameLine(available_space - button_width);

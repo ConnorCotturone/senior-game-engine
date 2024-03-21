@@ -1,11 +1,12 @@
 // Copyright © 2024 Jacob Curlin
 
 #include "render/camera.h"
+#include "ecs/events/engine_events.h"
 
 namespace cgx::render
 {
 
-    Camera::Camera(std::shared_ptr<cgx::core::InputManager> input_manager, glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+    Camera::Camera(std::shared_ptr<cgx::input::InputManager> input_manager, glm::vec3 position, glm::vec3 up, float yaw, float pitch)
         : m_input_manager(input_manager)
         , m_position(position)
         , m_up(up)
@@ -23,10 +24,10 @@ namespace cgx::render
             m_input_manager->getMouseOffset(x_offset, y_offset);
             Look(x_offset, y_offset, true);
             
-            if (m_input_manager->isKeyPressed(87)) { Translate(kForward, dt);  }
-            if (m_input_manager->isKeyPressed(83)) { Translate(kBackward, dt); }
-            if (m_input_manager->isKeyPressed(65)) { Translate(kLeft, dt);     }
-            if (m_input_manager->isKeyPressed(68)) { Translate(kRight, dt);    }
+            if (m_input_manager->isKeyPressed(cgx::input::Key::key_w)) { Translate(kForward, dt);  }
+            if (m_input_manager->isKeyPressed(cgx::input::Key::key_s)) { Translate(kBackward, dt); }
+            if (m_input_manager->isKeyPressed(cgx::input::Key::key_a)) { Translate(kLeft, dt);     }
+            if (m_input_manager->isKeyPressed(cgx::input::Key::key_d)) { Translate(kRight, dt);    }
         }
         updateCameraVectors();
     }
@@ -78,6 +79,21 @@ namespace cgx::render
 
         m_right = glm::normalize(glm::cross(m_front, m_world_up));
         m_up    = glm::normalize(glm::cross(m_right, m_front));
+    }
+
+    void Camera::EnableManualControl()
+    {
+        m_manual_control_enabled = true;
+
+        // extra pre-call to getMouseOffset to 'reset' the current offset created by mouse movements
+        // while camera control disabled
+        double x_offset, y_offset;
+        m_input_manager->getMouseOffset(x_offset, y_offset); 
+    }
+
+    void Camera::DisableManualControl()
+    {
+        m_manual_control_enabled = false;
     }
 
 }

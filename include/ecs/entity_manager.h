@@ -6,6 +6,7 @@
 #include <array>
 #include <bitset>
 #include <queue>
+#include <unordered_set>
 #include <vector>
 
 namespace cgx::ecs
@@ -25,6 +26,7 @@ namespace cgx::ecs
     private:
         std::queue<Entity> m_available_entities{};
         std::array<Signature, MAX_ENTITIES> m_signatures{};
+
 
         uint32_t m_active_entity_count;
     };

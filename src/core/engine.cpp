@@ -55,19 +55,11 @@ namespace cgx::core {
                                      m_settings.window_height,
                                      "engine");
 
-        m_input_manager = std::make_shared<cgx::core::InputManager>(m_ecs_manager, m_window_manager);
+        m_input_manager = std::make_shared<cgx::input::InputManager>(m_ecs_manager, m_window_manager);
         // (temp : remove this)
 
 
-        auto onEscapePressed = [this]() {
-            this->m_is_running = false;
-        };
-        InputAction escape_action;
-        escape_action.addCallback(onEscapePressed);
-        InputEventKey escape_key{InputType::KEYBOARD_KEY, InputState::PRESSED, GLFW_KEY_ESCAPE};
-        m_input_manager->BindInputAction(escape_key, escape_action);
-
-
+        
 
         m_resource_manager = std::make_unique<cgx::render::ResourceManager>();
 
@@ -81,6 +73,21 @@ namespace cgx::core {
         m_framebuffer->setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
         m_camera = std::make_unique<cgx::render::Camera>(m_input_manager, glm::vec3(0.0f, 0.0f, 3.0f));
+
+        SetupEngineEvents();
+
+        m_physics_system = m_ecs_manager->RegisterSystem<PhysicsSystem>();
+        {
+            cgx::ecs::Signature signature;
+            signature.set(m_ecs_manager->GetComponentType<RigidBody>());
+            signature.set(m_ecs_manager->GetComponentType<TransformComponent>());
+            m_ecs_manager->SetSystemSignature<PhysicsSystem>(signature);
+        }
+        m_physics_system->Initialize(m_ecs_manager);
+
+
+
+
 
         // ----- IMGUI ------
 
@@ -99,18 +106,10 @@ namespace cgx::core {
         m_render_settings = std::make_shared<cgx::gui::RenderSettings>();
         m_render_settings->msaa = false;
         m_render_settings->skybox = true;
-
-        m_physics_system = m_ecs_manager->RegisterSystem<PhysicsSystem>();
-        {
-            cgx::ecs::Signature signature;
-            signature.set(m_ecs_manager->GetComponentType<RigidBody>());
-            signature.set(m_ecs_manager->GetComponentType<TransformComponent>());
-            m_ecs_manager->SetSystemSignature<PhysicsSystem>(signature);
-        }
-        m_physics_system->Initialize(m_ecs_manager);
-
+        
         m_imgui_render_settings_window = std::make_unique<cgx::gui::ImGuiRenderSettingsWindow>(m_render_settings);
         m_imgui_manager->RegisterImGuiWindow(m_imgui_render_settings_window.get());
+
     }
 
     void Engine::Update() {
@@ -121,36 +120,6 @@ namespace cgx::core {
         m_physics_system->Update(static_cast<float>(delta_time));
         m_camera->Update(delta_time);
 
-
-        // m_event_handler->Update();
-
-        /*
-        if (!m_imgui_active) {
-            if (m_input_handler->m_ignore_next_mouse_update) {
-                m_input_handler->resetMouseOffset();
-                m_input_handler->m_ignore_next_mouse_update = false;
-            }
-
-            glfwSetInputMode(m_window_manager->getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            double x_offset, y_offset;
-            m_input_handler->getMouseOffset(x_offset, y_offset);
-            m_camera->MouseUpdate(x_offset, y_offset, true);
-
-            // keyboard camera updates
-            if (m_input_handler->IsKeyPressed(GLFW_KEY_W))
-                m_camera->KeyboardUpdate(cgx::render::kForward, delta_time);
-            if (m_input_handler->IsKeyPressed(GLFW_KEY_A))
-                m_camera->KeyboardUpdate(cgx::render::kLeft, delta_time);
-            if (m_input_handler->IsKeyPressed(GLFW_KEY_S))
-                m_camera->KeyboardUpdate(cgx::render::kBackward, delta_time);
-            if (m_input_handler->IsKeyPressed(GLFW_KEY_D))
-                m_camera->KeyboardUpdate(cgx::render::kRight, delta_time);
-        } else {
-            m_input_handler->m_ignore_next_mouse_update = true;
-            glfwSetInputMode(m_window_manager->getGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            m_camera->MouseUpdate((double) 0.0, (double) 0.0, true);
-        }
-        */
     }
 
     void Engine::Render() {
@@ -211,6 +180,32 @@ namespace cgx::core {
 
             model->Draw(*shader);
         }
+    }
+
+    void Engine::SetupEngineEvents()
+    {
+        // 'esc' : quit engine & close window
+        cgx::ecs::Event quit_event(cgx::events::engine::QUIT);
+        m_input_manager->BindKeyInputEvent(cgx::input::Key::key_escape, cgx::input::KeyAction::press, quit_event);
+        m_ecs_manager->AddEventListener(cgx::events::engine::QUIT, [this](cgx::ecs::Event& event) {
+            this->m_is_running = false;
+        });
+
+        // 'm' : activate manual camera control (look/move around)
+        cgx::ecs::Event enable_camera_control_event(cgx::events::engine::ENABLE_CAMERA_CONTROL);
+        m_input_manager->BindKeyInputEvent(cgx::input::Key::key_m, cgx::input::KeyAction::press, enable_camera_control_event);
+        m_ecs_manager->AddEventListener(cgx::events::engine::ENABLE_CAMERA_CONTROL, [this](cgx::ecs::Event& event) {
+            this->m_camera->EnableManualControl();
+            this->m_window_manager->DisableCursor();
+        });
+
+        // 'g' : activate GUI control (normal cursor operation, fixed camera)
+        cgx::ecs::Event disable_camera_control_event(cgx::events::engine::DISABLE_CAMERA_CONTROL);
+        m_input_manager->BindKeyInputEvent(cgx::input::Key::key_g, cgx::input::KeyAction::press, disable_camera_control_event);
+        m_ecs_manager->AddEventListener(cgx::events::engine::DISABLE_CAMERA_CONTROL, [this](cgx::ecs::Event& event) {
+            this->m_camera->DisableManualControl();
+            this->m_window_manager->EnableCursor();
+        });
     }
 
     void Engine::Shutdown() {}

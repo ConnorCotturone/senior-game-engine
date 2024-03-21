@@ -3,6 +3,8 @@
 #include "core/common.h"
 #include "ecs/entity_manager.h"
 
+#include <algorithm>
+
 namespace cgx::ecs
 {
 
@@ -35,6 +37,7 @@ namespace cgx::ecs
         m_signatures[entity].reset();   // reset entity's signature (bitset) 
 
         m_available_entities.push(entity);
+
         --m_active_entity_count;
     }
 

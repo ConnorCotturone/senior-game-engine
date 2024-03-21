@@ -16,13 +16,13 @@ namespace cgx::ecs
         explicit Event(EventId type) : m_type(type) {}
 
         template<typename T>
-        void SetParam(EventId id, T value)
+        void SetParam(ParamId id, T value)
         {
             m_data[id] = value;
         }
 
         template<typename T>
-        T GetParam(EventId id)
+        T GetParam(ParamId id)
         {
             return std::any_cast<T>(m_data[id]);
         }

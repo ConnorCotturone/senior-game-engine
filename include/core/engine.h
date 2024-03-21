@@ -6,20 +6,16 @@
 
 #include "core/common.h"
 #include "core/window_manager.h"
-#include "core/input_manager.h"
 #include "core/time.h"
-
-// (todo: remove)
-#include "core/input_handler.h"
-
 #include "core/physics_system.h"
+
+#include "input/input_manager.h"
 
 #include "ecs/ecs_manager.h"
 #include "ecs/components/transform_component.h"
 #include "ecs/components/rigid_body.h"
 #include "ecs/components/render_component.h"
 #include "ecs/components/light_component.h"
-#include "event/event_handler.h"
 
 #include "gui/imgui_manager.h"
 #include "gui/imgui_render_window.h"
@@ -74,6 +70,8 @@ namespace cgx::core {
 
         virtual void Shutdown();
 
+        void SetupEngineEvents();
+
     protected:
         EngineSettings m_settings;
         TimeData m_time_data;
@@ -82,12 +80,8 @@ namespace cgx::core {
 
         // unique
         std::shared_ptr<cgx::core::WindowManager> m_window_manager;
-        std::unique_ptr<cgx::event::EventHandler> m_event_handler;
-        std::shared_ptr<InputManager> m_input_manager;
+        std::shared_ptr<cgx::input::InputManager> m_input_manager;
         std::unique_ptr<cgx::render::Camera> m_camera;
-
-        // (todo: remove)
-        std::unique_ptr<InputHandler> m_input_handler;
 
         std::shared_ptr<cgx::core::PhysicsSystem> m_physics_system;
 
@@ -99,9 +93,9 @@ namespace cgx::core {
 
         std::unique_ptr<cgx::gui::ImGuiManager> m_imgui_manager;
         std::unique_ptr<cgx::gui::ImGuiRenderWindow> m_imgui_render_window;
-        std::unique_ptr<cgx::gui::ImGuiECSWindow> m_imgui_ecs_window;
         std::unique_ptr<cgx::gui::ImGuiPerformanceWindow> m_imgui_performance_window;
         std::unique_ptr<cgx::gui::ImGuiRenderSettingsWindow> m_imgui_render_settings_window;
+        std::unique_ptr<cgx::gui::ImGuiECSWindow> m_imgui_ecs_window;
 
         std::shared_ptr<cgx::gui::RenderSettings> m_render_settings;
 

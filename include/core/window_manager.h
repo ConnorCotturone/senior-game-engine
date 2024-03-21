@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core/common.h"
+#include "input/input_types.h"
 #include <GLFW/glfw3.h>
 
 namespace cgx::core {
@@ -18,9 +19,10 @@ namespace cgx::core {
     }
     */
 
-    using KeyCallback = std::function<void(int key, int state)>;
-    using MouseMoveCallback = std::function<void(double x_pos, double y_pos)>;
-    using MouseButtonCallback = std::function<void(int button, int state)>;
+    using KeyCallback           = std::function<void(cgx::input::Key, cgx::input::KeyAction)>;
+    using MouseButtonCallback   = std::function<void(cgx::input::Key, cgx::input::KeyAction)>;
+    using MouseMoveCallback     = std::function<void(double x_pos, double y_pos)>;
+    using ScrollCallback        = std::function<void(double x_offset, double y_offset)>;
 
     class WindowManager {
     public:
@@ -33,34 +35,48 @@ namespace cgx::core {
         
         [[nodiscard]] GLFWwindow *getGLFWWindow() const { return m_window; }
 
+        void EnableCursor();
+        void DisableCursor();
+
         void getMousePosition(double &x_pos, double &y_pos);
 
-        bool isKeyPressed(int key) const;
-        bool isKeyReleased(int key) const;
+        bool isKeyPressed(cgx::input::Key key) const;
+        bool isKeyReleased(cgx::input::Key key) const;
 
-        bool isMouseButtonPressed(int button) const;
-        bool isMouseButtonReleased(int button) const;
+        bool isMouseButtonPressed(cgx::input::Key button) const;
+        bool isMouseButtonReleased(cgx::input::Key button) const;
 
         void setKeyCallback(const KeyCallback& cb);          
         void setCursorPosCallback(const MouseMoveCallback& cb);
         void setMouseButtonCallback(const MouseButtonCallback& cb);
+        void setScrollCallback(const ScrollCallback& cb);
+
+        
         
         // bool ShouldClose() const;
 
     private:
-
         GLFWwindow *m_window;
 
-        KeyCallback m_key_callback;
-        MouseMoveCallback m_mouse_move_callback;
+        KeyCallback         m_key_callback;
+        MouseMoveCallback   m_mouse_move_callback;
         MouseButtonCallback m_mouse_button_callback;
+        ScrollCallback      m_scroll_callback;
 
-        void setupGLFWCallbacks();
+        static void FramebufferSizeCallback(GLFWwindow *window, int width, int height);
+
         static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void glfwCursorPosCallback(GLFWwindow* window, double xpos, double ypos);
         static void glfwMouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-        static void FramebufferSizeCallback(GLFWwindow *window, int width, int height);
+        static void glfwScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+        void setupGLFWCallbacks();
 
+        static cgx::input::KeyAction    TranslateKeyActionToInternal(int glfw_action);
+        static cgx::input::Key          TranslateKeyToInternal(int glfw_key);
+        static cgx::input::Key          TranslateMouseButtonToInternal(int glfw_mouse_button);
+        static int                      TranslateKeyActionToGLFW(cgx::input::KeyAction action);
+        static int                      TranslateKeyToGLFW(cgx::input::Key key);
+        static int                      TranslateMouseButtonToGLFW(cgx::input::Key key);
 
     }; // class WindowManager
 
