@@ -85,10 +85,6 @@ namespace cgx::core {
         }
         m_physics_system->Initialize(m_ecs_manager);
 
-
-
-
-
         // ----- IMGUI ------
 
         m_imgui_manager = std::make_unique<cgx::gui::ImGuiManager>();
